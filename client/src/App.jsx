@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Landing from './components/Landing'; // Adjust the import path as necessary
+import Landing from './pages/Landing'; // Adjust the import path as necessary
 import LoginPage from './pages/LoginPage';
 
 function App() {
