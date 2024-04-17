@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 const Navbar = () => {
   return (
-    <nav className="flex justify-between items-center mx-auto p-4" style={{ backgroundColor: '#486284', maxWidth: '1400px' }}>
+    <nav className="flex justify-between items-center mx-auto p-4" style={{ backgroundColor: '3D505E', maxWidth: '1400px' }}>
       <div className="text-3xl font-bold">
         <span className="text-white">Quick</span>
         <span className="text-[#BE2817]">Eval</span>
