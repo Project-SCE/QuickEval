@@ -2,8 +2,50 @@ import Navbar2 from '../components/Navbar2';
 import React, { useState } from 'react';
 
 const SignIn = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+
+
+  const navigate = useNavigate();
+    const [error, setError] = useState(null);
+    const [message, setMessage] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+
+  const reset=(e) =>{
+    sendPasswordResetEmail(auth, email)
+  .then(() => {
+    // Password reset email sent!
+    // ..
+    setMessage("If your email is registered with us, you will receive a password reset email shortly.");
+    console.log("Password reset email sent!")
+  })
+  .catch((error) => {
+    const errorCode = error.code;
+    const errorMessage = error.message;
+    setMessage(errorCode.substr(5, errorCode.length-1))
+    console.log(errorCode, errorMessage)
+    // ..
+  });
+}
+    const onLogin = (e) => {
+        e.preventDefault();
+        signInWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+            // Signed in
+            const user = userCredential.user;
+            navigate("/")
+            console.log(user);
+        })
+        .catch((error) => {
+            const errorCode = error.code;
+            var errorMessage = error.message;
+            
+            console.log(errorCode, errorMessage)
+            setError(errorCode);
+        });
+       
+    }
+
+
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -72,8 +114,15 @@ const SignIn = () => {
                 Sign In
               </button>
             </div>
-          </form>
+
         </div>
+
+            
+            {message &&<div className="error-message flex justify-center p-2 bg-red-100 border border-red-400 rounded">
+                    <p>{message}</p>
+                </div> }
+        </form>
+
       </div>
     </div>
   );
