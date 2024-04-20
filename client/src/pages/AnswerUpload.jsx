@@ -1,9 +1,10 @@
 import React from 'react';
+import Navbar from '../components/Navbar';
 
 const AnswerUpload = () => {
   const labelStyle = {
     position: 'absolute',
-    top: '20px',
+    top: '75px',
     left: '20px',
     color: '#000',
     fontFamily: 'Jakarta Sans, sans-serif',
@@ -55,6 +56,7 @@ const AnswerUpload = () => {
 
   return (
     <div>
+      <Navbar/>
       <div style={labelStyle}>Flat 1</div>
       <div style={uploadLabelStyle}>Upload answer paper</div>
       <button style={buttonStyle}>Upload(s)</button>
