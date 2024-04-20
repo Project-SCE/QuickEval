@@ -34,7 +34,7 @@ const SignIn = () => {
         .then((userCredential) => {
             // Signed in
             const user = userCredential.user;
-            navigate("/")
+            navigate("/evaluator")
             console.log(user);
         })
         .catch((error) => {
