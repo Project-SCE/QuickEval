@@ -1,19 +1,33 @@
+// components/Question.jsx
 import React, { useState } from 'react';
 
-const Question = ({ id, question, marks, totalMarks }) => {
+const confidenceColor = (confidence) => {
+  switch (confidence) {
+    case 'low':
+      return 'bg-red-200 text-red-800'; // Low confidence
+    case 'medium':
+      return 'bg-yellow-200 text-yellow-800'; // Medium confidence
+    case 'high':
+      return 'bg-green-200 text-green-800'; // High confidence
+    default:
+      return ''; // Default case if confidence is not provided
+  }
+};
+
+const Question = ({ id, question, marks, totalMarks, confidence }) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
   return (
-    <div className={`mb-4 p-4 shadow-md rounded ${isExpanded ? 'bg-blue-50' : 'bg-white'}`}>
-      <div className="flex justify-between items-center mb-2">
+    <div className={`mb-4 p-4 shadow-md rounded ${isExpanded ? 'bg-blue-50' : 'bg-white'}`} onClick={() => setIsExpanded(!isExpanded)}>
+      <div className="flex justify-between items-center mb-2 cursor-pointer">
         <h3 className="text-lg font-semibold">{id}. {question}</h3>
         <div className="flex items-center space-x-2">
-          <div className={`px-2 py-1 rounded ${isExpanded ? 'bg-blue-300' : 'bg-blue-100'} text-blue-800`}>
+          <div className={`px-2 py-1 rounded ${confidenceColor(confidence)}`}>
             Marks {marks}/{totalMarks}
           </div>
-          <button onClick={() => setIsExpanded(!isExpanded)} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded focus:outline-none focus:shadow-outline">
-            {isExpanded ? 'Collapse' : 'Confidence'}
-          </button>
+          <div className={`px-2 py-1 rounded ${confidenceColor(confidence)}`}>
+            {confidence.charAt(0).toUpperCase() + confidence.slice(1)}
+          </div>
         </div>
       </div>
       {isExpanded && (

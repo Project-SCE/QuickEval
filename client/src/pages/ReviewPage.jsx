@@ -7,10 +7,10 @@ const ReviewPage = () => {
   const [activeTab, setActiveTab] = useState('answerPaper');
 
   const questions = [
-    { id: 1, question: 'First question', marks: 2, totalMarks: 5 },
-    { id: 2, question: 'Second question', marks: 5, totalMarks: 5 },
-    { id: 3, question: 'Third question', marks: 3, totalMarks: 5 },
-    { id: 4, question: 'Fourth question', marks: 5, totalMarks: 5 }
+    { id: 1, question: 'First question', marks: 2, totalMarks: 5, confidence: 'low' },
+    { id: 2, question: 'Second question', marks: 5, totalMarks: 5, confidence: 'high' },
+    { id: 3, question: 'Third question', marks: 3, totalMarks: 5, confidence: 'medium' },
+    { id: 4, question: 'Fourth question', marks: 5, totalMarks: 5, confidence: 'high' }
   ];
 
   const totalMarks = questions.reduce((total, question) => total + question.marks, 0);
@@ -31,11 +31,11 @@ const ReviewPage = () => {
 
   return (
     <div className="flex flex-col min-h-screen bg-blue-50">
-      <div className="w-full">
+      <div className="w-full"> {/* Removed padding from the Navbar container */}
         <Navbar currentPage="review" />
       </div>
       <div className="flex flex-grow">
-        <div className="flex flex-col w-full lg:w-3/4 p-8">
+        <div className="flex flex-col w-full lg:w-2/3 px-8 pt-8 pb-8 lg:pb-0 lg:pt-8"> {/* Adjusted padding for the main content area */}
           <h2 className="text-2xl font-bold mb-6">Review - FLAT series-1</h2>
           <div className="mb-4">
             <label className="block text-gray-700 text-sm font-bold mb-2">
@@ -47,12 +47,12 @@ const ReviewPage = () => {
             </select>
           </div>
           {questions.map((q) => (
-            <Question key={q.id} id={q.id} question={q.question} marks={q.marks} totalMarks={q.totalMarks} />
+            <Question key={q.id} id={q.id} question={q.question} marks={q.marks} totalMarks={q.totalMarks} confidence={q.confidence} />
           ))}
           <div className="text-right font-semibold">Total marks: {totalMarks}/{totalPossibleMarks}</div>
         </div>
-        <div className="w-1/4 p-8">
-          <div className="flex lg:flex-col justify-start lg:justify-between lg:space-y-2">
+        <div className="w-full lg:w-1/3 px-8 pt-8 pb-8 lg:pt-8 lg:pb-0"> {/* Adjusted padding for the side tab area */}
+          <div className="flex justify-between space-x-4">
             {['Answer paper', 'Question paper', 'Scheme'].map((tab) => (
               <button
                 key={tab}
