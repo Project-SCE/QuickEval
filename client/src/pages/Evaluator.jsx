@@ -52,13 +52,13 @@ const NewEvaluatorForm = ({ onSubmit, onClose, currentEvaluator }) => {
   const [scheme, setScheme] = useState(currentEvaluator ? currentEvaluator.scheme : null);
   const [isUploading, setIsUploading] = useState(false);
 
-  const onFileSelected = async event => {
+  const onFileSelected = async (event, setter) => {
     const file = event.target.files[0];
     setIsUploading(true);
     try {
       const { fileUrl, filePath } = await uploadManager.upload({ data: file });
+      setter(fileUrl);
       
-      return fileUrl;
     } catch (e) {
       alert(`Error:\n${e.message}`);
     }finally {
@@ -68,7 +68,7 @@ const NewEvaluatorForm = ({ onSubmit, onClose, currentEvaluator }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(questionPaper.fullfilled)
+    console.log(questionPaper, scheme)
     onSubmit({ 
       title, 
       questionPaper, 
@@ -108,7 +108,7 @@ const NewEvaluatorForm = ({ onSubmit, onClose, currentEvaluator }) => {
           <input 
             className="w-full p-2 mb-4 border border-gray-400 rounded bg-white" 
             type="file"
-            onChange={(e) => { setQuestionPaper(onFileSelected(e) );}}
+            onChange={(e) => onFileSelected(e, setQuestionPaper)}
             required 
             disabled={isUploading}
           />
@@ -124,7 +124,7 @@ const NewEvaluatorForm = ({ onSubmit, onClose, currentEvaluator }) => {
           <input 
             className="w-full p-2 mb-4 border border-gray-400 rounded bg-white" 
             type="file" 
-            onChange={(e) => { setScheme(onFileSelected(e))}}
+            onChange={(e) => onFileSelected(e, setScheme)}
             required 
           />
            {isUploading && (
