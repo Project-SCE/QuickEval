@@ -23,6 +23,7 @@ const SignIn = () => {
   .catch((error) => {
     const errorCode = error.code;
     const errorMessage = error.message;
+    setMessage(errorCode.substr(5, errorCode.length-1))
     console.log(errorCode, errorMessage)
     // ..
   });
@@ -122,7 +123,10 @@ const SignIn = () => {
                 Forgot password?
               </a>
             </div>
-            {message && <p>{message}</p>}
+            
+            {message &&<div className="error-message flex justify-center p-2 bg-red-100 border border-red-400 rounded">
+                    <p>{message}</p>
+                </div> }
         </form>
       </div>
     </div>
