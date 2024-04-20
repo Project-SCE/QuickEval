@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Navbar from '../components/Navbar'; 
+import Navbarnormal from '../components/Navbarnormal'; 
 
 import * as Bytescale from "@bytescale/sdk";
 
@@ -192,7 +192,7 @@ const EvaluatorPage = () => {
 
   return (
     <>
-      <Navbar currentPage="home" />
+      <Navbarnormal currentPage="signin" />
       <div className="p-8">
         <div className="font-bold text-2xl mb-6">Evaluators</div>
         <div className="grid grid-cols-4 gap-4">

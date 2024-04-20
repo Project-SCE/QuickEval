@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import {  createUserWithEmailAndPassword  } from 'firebase/auth';
 import { auth } from '../firebase';
 import { NavLink, useNavigate } from 'react-router-dom';
-import Navbar from '../components/Navbar';
+import Navbarlogin from '../components/Navbarlogin';
 
 const SignIn = () => {
   const [email, setEmail] = useState('');
@@ -45,7 +45,7 @@ const SignIn = () => {
 
   return (
     <div>
-        <Navbar currentPage="signup"/>
+        <Navbarlogin currentPage="signup"/>
     <div className="min-h-90vh flex items-center justify-center bg-gray-100">
        
       <div className="max-w-md w-full space-y-8">
