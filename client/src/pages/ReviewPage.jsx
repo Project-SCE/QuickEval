@@ -5,10 +5,10 @@ const ReviewPage = () => {
   const [activeTab, setActiveTab] = useState('answerPaper');
 
   const questions = [
-    { id: 1, marks: 2, totalMarks: 5 },
-    { id: 2, marks: 5, totalMarks: 5 },
-    { id: 3, marks: 3, totalMarks: 5 },
-    { id: 4, marks: 5, totalMarks: 5 }
+    { id: 1, question: 'First question', marks: 2, totalMarks: 5 },
+    { id: 2, question: 'Second question', marks: 5, totalMarks: 5 },
+    { id: 3, question: 'Third question', marks: 3, totalMarks: 5 },
+    { id: 4, question: 'Fourth question', marks: 5, totalMarks: 5 }
   ];
 
   const totalMarks = questions.reduce((total, question) => total + question.marks, 0);
@@ -18,76 +18,57 @@ const ReviewPage = () => {
     setActiveTab(tabName);
   };
 
-  const getTabContent = () => {
-    switch (activeTab) {
-      case 'answerPaper':
-        return 'Answer paper content'; // Replace with actual content component
-      case 'questionPaper':
-        return 'Question paper content'; // Replace with actual content component
-      case 'scheme':
-        return 'Scheme content'; // Replace with actual content component
-      default:
-        return 'Content not found';
-    }
+  const renderTabContent = () => {
+    return <div className="bg-white p-4 shadow rounded">{`${activeTab} content`}</div>;
   };
 
   return (
-    <>
-      <Navbar currentPage="review" />
-      <div className="bg-gray-100">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="py-4">
-            <label className="block text-sm font-medium text-gray-700">Student:</label>
-            <select className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
-              <option>John Doe</option>
-              {/* More options */}
-            </select>
-          </div>
-          <div className="flex mb-4">
-            <div className="flex-initial w-3/4 bg-white p-6 shadow rounded-lg">
-              <header className="border-b pb-4 mb-4">
-                <h1 className="text-xl font-semibold">FLAT series-1</h1>
-              </header>
-              {questions.map((question) => (
-                <div key={question.id} className="mb-4 p-4 bg-gray-100 rounded shadow">
-                  <div className="flex justify-between items-center mb-4">
-                    <h2 className="font-semibold text-lg">Question {question.id}</h2>
-                    <span>
-                      Marks {question.marks}/{question.totalMarks}
-                    </span>
-                  </div>
-                  <textarea className="w-full p-2 mb-4 border rounded" placeholder="Student answer" />
-                  <textarea className="w-full p-2 mb-4 border rounded" placeholder="Feedback" />
-                </div>
-              ))}
-              <footer>
-                <h2 className="text-lg font-semibold">Total marks: {totalMarks}/{totalPossibleMarks}</h2>
-              </footer>
+    <div className="flex flex-col min-h-screen">
+      <div className="w-full">
+        <Navbar currentPage="review" />
+      </div>
+      <div className="flex-grow bg-gray-100 p-8 w-full">
+        <div className="flex w-full">
+          <div className="flex-grow bg-white shadow-md rounded p-6">
+            <h2 className="text-2xl font-bold mb-4">FLAT series-1</h2>
+            <div className="mb-4">
+              <label className="block text-gray-700 text-sm font-bold mb-2">Student:</label>
+              <select className="shadow border rounded w-1/2 py-2 px-3 text-gray-700">
+                <option>John Doe</option>
+                {/* More student options could be dynamically rendered here */}
+              </select>
             </div>
-            <div className="flex-initial w-1/4 ml-4">
-              <div className="bg-gray-200 p-4 rounded-lg">
-                <div className="flex flex-col space-y-2">
-                  {['answerPaper', 'questionPaper', 'scheme'].map((tabName) => (
-                    <button
-                      key={tabName}
-                      onClick={() => handleTabChange(tabName)}
-                      className={`text-lg text-left p-2 rounded ${
-                        activeTab === tabName ? 'bg-blue-500 text-white' : 'bg-gray-300'
-                      }`}
-                    >
-                      {tabName.replace(/([A-Z])/g, ' $1').trim()} {/* Add space before capital letters */}
-                    </button>
-                  ))}
+            {questions.map((q) => (
+              <div key={q.id} className="mb-6">
+                <div className="flex justify-between items-center mb-2">
+                  <h3 className="text-lg font-semibold">{q.id}. {q.question}</h3>
+                  <span>Marks {q.marks}/{q.totalMarks}</span>
                 </div>
-                <div className="mt-4 p-4 bg-white rounded-lg">
-                  {getTabContent()}
-                </div>
+                <textarea className="w-full shadow appearance-none border rounded py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" placeholder="Student answer" />
+                <textarea className="w-full shadow appearance-none border rounded py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" placeholder="Feedback" />
               </div>
+            ))}
+            <div className="text-right font-semibold">Total marks: {totalMarks}/{totalPossibleMarks}</div>
+          </div>
+          <div className="w-1/4 ml-4 p-6">
+            <div className="flex flex-col space-y-2 mb-4">
+              {['Answer paper', 'Question paper', 'Scheme'].map((tab) => (
+                <button
+                  key={tab}
+                  onClick={() => handleTabChange(tab.toLowerCase().replace(/\s/g, ''))}
+                  className={`text-lg w-full text-left p-3 rounded-lg transition-colors duration-150 ${
+                    activeTab === tab.toLowerCase().replace(/\s/g, '') ? 'bg-blue-500 text-white' : 'bg-gray-200 hover:bg-gray-300'
+                  }`}
+                >
+                  {tab}
+                </button>
+              ))}
             </div>
+            {renderTabContent()}
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
