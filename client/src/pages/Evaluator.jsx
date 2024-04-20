@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import Navbar from '../components/Navbar'; 
+
 import * as Bytescale from "@bytescale/sdk";
 
 
 const uploadManager = new Bytescale.UploadManager({
   apiKey: import.meta.env.VITE_BYTESCALE_API_KEY // This is your API key.
 });
+
 
 
 
@@ -22,6 +24,7 @@ const generateBackgroundColor = () => {
 const EvaluatorCard = ({ title, onEdit, onDelete, colorClass }) => {
   return (
     <div className={`w-full h-52 ${colorClass} rounded-lg shadow-md flex flex-col items-center justify-center p-4`}>
+    
       <div className="text-gray-700 text-center text-xl font-semibold">{title}</div>
       <div className="flex justify-center gap-2 mt-4">
         <button onClick={onEdit} className="text-sm bg-gray-600 hover:bg-gray-700 text-white py-1 px-2 rounded transition duration-300 ease-in-out">
@@ -50,6 +53,7 @@ const NewEvaluatorForm = ({ onSubmit, onClose, currentEvaluator }) => {
   const [title, setTitle] = useState(currentEvaluator ? currentEvaluator.title : '');
   const [questionPaper, setQuestionPaper] = useState(currentEvaluator ? currentEvaluator.questionPaper : null);
   const [scheme, setScheme] = useState(currentEvaluator ? currentEvaluator.scheme : null);
+
   const [isUploading, setIsUploading] = useState(false);
 
   const onFileSelected = async event => {
@@ -68,7 +72,8 @@ const NewEvaluatorForm = ({ onSubmit, onClose, currentEvaluator }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(questionPaper.fullfilled)
+    console.log(questionPaper)
+
     onSubmit({ 
       title, 
       questionPaper, 
@@ -79,6 +84,7 @@ const NewEvaluatorForm = ({ onSubmit, onClose, currentEvaluator }) => {
     setQuestionPaper(null);
     setScheme(null);
   };
+
   const Spinner = () => (
     <div className="flex items-center justify-center">
       <div className="w-16 h-16 border-b-2 border-gray-900 rounded-full animate-spin"></div>
@@ -86,14 +92,17 @@ const NewEvaluatorForm = ({ onSubmit, onClose, currentEvaluator }) => {
   );
   
 
+
   return (
     <div className="fixed inset-0 bg-gray-600 bg-opacity-50 h-full w-full flex items-center justify-center">
       <div className="bg-gray-400 p-5 rounded-lg shadow-lg w-1/3">
+
         <div className="text-xl mb-4 flex justify-center font-bold text-black">New Evaluator</div>
         <form onSubmit={handleSubmit}>
         <div className="text-xl  font-jakarta-sans text-black-600 mb-2">
                 Enter title
               </div>
+
           <input 
             className="w-full p-2 mb-4 border border-gray-400 rounded bg-white" 
             type="text" 
@@ -102,6 +111,7 @@ const NewEvaluatorForm = ({ onSubmit, onClose, currentEvaluator }) => {
             onChange={(e) => setTitle(e.target.value)}
             required 
           />
+
           <div className="text-xl  font-jakarta-sans text-black-600 mb-2">
                 Upload question paper
               </div>
@@ -134,6 +144,7 @@ const NewEvaluatorForm = ({ onSubmit, onClose, currentEvaluator }) => {
 
           )}
           <div className="flex justify-center">
+
             <button type="submit" className="bg-white hover:bg-gray-200 text-gray-700 font-bold py-2 px-4 rounded">
               {currentEvaluator ? 'Update' : 'Create'}
             </button>
@@ -186,7 +197,9 @@ const EvaluatorPage = () => {
       <div className="p-8">
         <div className="font-bold text-2xl mb-6">Evaluators</div>
         <div className="grid grid-cols-4 gap-4">
+
         <AddEvaluatorButton onClick={() => setIsFormOpen(true)} />
+
           {evaluators.map((evaluator, index) => (
             <EvaluatorCard
               key={index}
@@ -196,7 +209,7 @@ const EvaluatorPage = () => {
               onDelete={() => handleDelete(index)}
             />
           ))}
-          
+
         </div>
         {isFormOpen && (
           <NewEvaluatorForm
