@@ -1,51 +1,41 @@
 import React, { useState } from 'react';
+import {  createUserWithEmailAndPassword  } from 'firebase/auth';
 import { auth } from '../firebase';
 import { NavLink, useNavigate } from 'react-router-dom';
-import {  signInWithEmailAndPassword , sendPasswordResetEmail  } from 'firebase/auth';
-
 import Navbar from '../components/Navbar';
 
 const SignIn = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const navigate = useNavigate();
-    const [error, setError] = useState(null);
-    const [message, setMessage] = useState('');
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-
-  const reset=(e) =>{
-    sendPasswordResetEmail(auth, email)
-  .then(() => {
-    // Password reset email sent!
-    // ..
-    setMessage("If your email is registered with us, you will receive a password reset email shortly.");
-    console.log("Password reset email sent!")
-  })
-  .catch((error) => {
-    const errorCode = error.code;
-    const errorMessage = error.message;
-    console.log(errorCode, errorMessage)
-    // ..
-  });
-}
-    const onLogin = (e) => {
-        e.preventDefault();
-        signInWithEmailAndPassword(auth, email, password)
+  const [error, setError] = useState(null);
+  
+ 
+  const onSubmit = async (e) => {
+      e.preventDefault()
+     
+      await createUserWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
             // Signed in
             const user = userCredential.user;
-            navigate("/")
             console.log(user);
+            console.log("User created successfully");
+            navigate("/login")
+            // ...
         })
         .catch((error) => {
             const errorCode = error.code;
             var errorMessage = error.message;
-            
-            console.log(errorCode, errorMessage)
+         
+            console.log(errorCode, errorMessage);
             setError(errorCode);
+            // ..
         });
-       
-    }
+ 
+   
+  }
 
+  
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -55,15 +45,16 @@ const SignIn = () => {
 
   return (
     <div>
-      <Navbar currentPage="signin"></Navbar>
+        <Navbar currentPage="signup"/>
     <div className="min-h-90vh flex items-center justify-center bg-gray-100">
+       
       <div className="max-w-md w-full space-y-8">
         <div>
           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            Sign In
+            Sign Up
           </h2>
         </div>
-        <form className="mt-8 space-y-6" onSubmit={onLogin}>
+        <form className="mt-8 space-y-6" onSubmit={onSubmit}>
           <input type="hidden" name="remember" defaultValue="true" />
           <div className="rounded-md shadow-sm -space-y-px">
             <div>
@@ -101,7 +92,9 @@ const SignIn = () => {
           </div>
 
           <div className="flex items-center justify-between">
-            
+            <div className="text-sm">
+              
+            </div>
           </div>
 
           <div>
@@ -109,7 +102,7 @@ const SignIn = () => {
               type="submit"
               className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
             >
-              Sign In
+              Sign Up
             </button>
           </div>
           {error && 
@@ -117,12 +110,6 @@ const SignIn = () => {
                     <p>{error}</p>
                 </div>
           }
-          <div className="text-sm flex justify-center">
-              <a href="#" onClick={reset} className="font-medium text-indigo-600 hover:text-indigo-500">
-                Forgot password?
-              </a>
-            </div>
-            {message && <p>{message}</p>}
         </form>
       </div>
     </div>

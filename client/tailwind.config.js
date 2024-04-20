@@ -13,6 +13,9 @@ module.exports = {
       fontFamily: {
         poppins: ["Poppins", "sans-serif"],
       },
+      minHeight: {
+        '90vh': '90vh',
+      }
     },
     screens: {
       xs: "480px",
