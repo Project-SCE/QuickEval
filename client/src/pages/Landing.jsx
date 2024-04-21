@@ -18,7 +18,7 @@ const Landing = () => {
             <h1 className="text-6xl font-bold mb-4 text-white">NO MORE GRADING HASSLES:</h1>
             <h2 className="text-5xl font-bold mb-4 text-white">SAY HELLO TO INSTANT SCORES!</h2>
             <p className="text-2xl mb-8 text-[#D9D9D9]">Experience the future of grading! Our tool automates the tedious task of grading papers, giving you instant scores without the hassle. Say goodbye to hours of manual work and hello to quick, accurate results!</p>
-            <button  className="bg-[#262B36] hover:bg-[#1e2430] text-white font-bold py-2 px-4 rounded text-lg"><Link to="/signup">Get Started</Link></button>
+            <button  className="bg-[#BE2817] hover:bg-red-950 text-white font-bold py-2 px-4 rounded text-lg"><Link to="/signup">Get Started</Link></button>
           </div>
           <div className="flex-1">
             <img src={landingPagePic} alt="Landing page visual" />
