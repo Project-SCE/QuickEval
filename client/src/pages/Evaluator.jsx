@@ -165,7 +165,7 @@ const EvaluatorPage = () => {
 
   const { currentUser } = useAuth();
 
-  console.log(currentUser); 
+  
 
   const addEvaluator = (newEvaluator) => {
     if (currentEditingIndex !== null) {

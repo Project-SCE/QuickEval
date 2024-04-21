@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import {  createUserWithEmailAndPassword  } from 'firebase/auth';
+import {  createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { auth } from '../firebase';
 import { NavLink, useNavigate } from 'react-router-dom';
 import Navbarlogin from '../components/Navbarlogin';
@@ -19,10 +19,16 @@ const SignIn = () => {
         .then((userCredential) => {
             // Signed in
             const user = userCredential.user;
-            user.displayName = name;
             console.log(user);
             console.log("User created successfully");
             navigate("/login")
+            return updateProfile(user, {
+              displayName: name
+            }).then(() => {
+              console.log("Profile updated successfully!");
+              console.log(user.displayName); // Now this should be 'John Doe'
+            });
+            
             // ...
         })
         .catch((error) => {
