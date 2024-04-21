@@ -6,6 +6,7 @@ import SignUp from './pages/SignUp';
 import EvaluatorPage from './pages/Evaluator';
 import {auth} from './firebase';
 import { AuthProvider } from './Authcontext';
+import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
   return (
@@ -15,7 +16,11 @@ function App() {
         <Route path="/" element={<Landing />} />  // Now LandingPage is at root
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignUp />} />
-        <Route path="/evaluator" element={<EvaluatorPage />} />
+        <Route path="/evaluator" element={
+          <ProtectedRoute>
+            <EvaluatorPage />
+          </ProtectedRoute>
+        } />
       </Routes>
     </Router>
     </AuthProvider>
