@@ -5,14 +5,14 @@ import landingPagePic from '../assets/landingpagepic.png'; // Make sure the path
 
 const Landing = () => {
   const gradientStyle = {
-    background: "linear-gradient(to right, #3D505E 83%, #828E9C 110%, #FFFFFF 140%)"
+    background: "linear-gradient(to right, #1F2933, #3d525e 80%, #959EAD 120%)"
   };
   const extensionColor = "#262B36";
 
   return (
     <div>
       <div style={gradientStyle} className="min-h-screen">
-        <Navbar />
+        <Navbar/>
         <div className="flex justify-between items-center p-12 h-screen">
           <div className="flex-1">
             <h1 className="text-6xl font-bold mb-4 text-white">NO MORE GRADING HASSLES:</h1>
