@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, {  useState  } from 'react';
 import { auth } from '../firebase';
 import { NavLink, useNavigate } from 'react-router-dom';
-import {  signInWithEmailAndPassword , sendPasswordResetEmail  } from 'firebase/auth';
+import {  signInWithEmailAndPassword , sendPasswordResetEmail,   } from 'firebase/auth';
+import Navbarlogin from '../components/Navbarlogin';
 
-import Navbar from '../components/Navbar';
+
+
 
 const SignIn = () => {
   const navigate = useNavigate();
@@ -34,8 +36,11 @@ const SignIn = () => {
         .then((userCredential) => {
             // Signed in
             const user = userCredential.user;
-            navigate("/evaluator")
-            console.log(user);
+
+           
+            console.log("user"+user);
+             navigate("/evaluator")
+
         })
         .catch((error) => {
             const errorCode = error.code;
@@ -46,7 +51,7 @@ const SignIn = () => {
         });
        
     }
-
+    
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -56,7 +61,7 @@ const SignIn = () => {
 
   return (
     <div>
-      <Navbar currentPage="signin"></Navbar>
+      <Navbarlogin currentPage="signin"></Navbarlogin>
     <div className="min-h-90vh flex items-center justify-center bg-gray-100">
       <div className="max-w-md w-full space-y-8">
         <div>
@@ -114,7 +119,7 @@ const SignIn = () => {
             </button>
           </div>
           {error && 
-                <div className="error-message flex justify-center">
+                <div className="error-message flex justify-center p-2 bg-red-100 border border-red-400 rounded">
                     <p>{error}</p>
                 </div>
           }
