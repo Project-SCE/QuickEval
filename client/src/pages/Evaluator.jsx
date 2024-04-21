@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Navbarnormal from '../components/Navbarnormal'; 
+import { useAuth } from '../Authcontext';
 
 import * as Bytescale from "@bytescale/sdk";
 
@@ -7,8 +8,6 @@ import * as Bytescale from "@bytescale/sdk";
 const uploadManager = new Bytescale.UploadManager({
   apiKey: import.meta.env.VITE_BYTESCALE_API_KEY // This is your API key.
 });
-
-
 
 
 // Function to generate a random pastel aesthetic background color
@@ -163,6 +162,10 @@ const EvaluatorPage = () => {
   const [evaluators, setEvaluators] = useState([]);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [currentEditingIndex, setCurrentEditingIndex] = useState(null);
+
+  const { currentUser } = useAuth();
+
+  console.log(currentUser); 
 
   const addEvaluator = (newEvaluator) => {
     if (currentEditingIndex !== null) {

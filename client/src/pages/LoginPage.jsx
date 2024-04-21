@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, {  useState  } from 'react';
 import { auth } from '../firebase';
 import { NavLink, useNavigate } from 'react-router-dom';
-import {  signInWithEmailAndPassword , sendPasswordResetEmail  } from 'firebase/auth';
+import {  signInWithEmailAndPassword , sendPasswordResetEmail,   } from 'firebase/auth';
 import Navbarlogin from '../components/Navbarlogin';
+
 
 
 
@@ -35,8 +36,9 @@ const SignIn = () => {
         .then((userCredential) => {
             // Signed in
             const user = userCredential.user;
-            navigate("/evaluator")
-            console.log(user);
+           
+            console.log("user"+user);
+             navigate("/evaluator")
         })
         .catch((error) => {
             const errorCode = error.code;
@@ -47,7 +49,7 @@ const SignIn = () => {
         });
        
     }
-
+    
 
   const handleSubmit = (e) => {
     e.preventDefault();
