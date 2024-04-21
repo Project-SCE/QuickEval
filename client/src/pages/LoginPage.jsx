@@ -36,9 +36,11 @@ const SignIn = () => {
         .then((userCredential) => {
             // Signed in
             const user = userCredential.user;
+
            
             console.log("user"+user);
              navigate("/evaluator")
+
         })
         .catch((error) => {
             const errorCode = error.code;
