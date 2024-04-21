@@ -34,20 +34,36 @@ const Landing = () => {
             {/* Team members */}
             <div className="bg-white rounded-lg shadow p-6">
               <h3 className="text-xl font-semibold mb-2">JOBIN TOM</h3>
-              <p className="text-gray-600">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+              <p className="text-gray-600">A technology enthusiast working on my web development skills</p>
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+              <a href="https://github.com/jobint001"><img src="src/assets/github.png" alt="github" width="40" height="40" style={{marginLeft:'55px', marginRight: '20px' }}/></a>
+              <a href="https://www.linkedin.com/in/jobintomofficial"><img src="src/assets/image.png" alt="linkedin" width="40" height="40"/></a>
+              </div>
             </div>
             <div className="bg-white rounded-lg shadow p-6">
               <h3 className="text-xl font-semibold mb-2">MUHAMED ADIL</h3>
-              <p className="text-gray-600">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+              <p className="text-gray-600">CSE undergrad with a passion for Data Science, ML and web development</p>
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+              <a href="https://github.com/adilzubair"><img src="src/assets/github.png" alt="github" width="40" height="40" style={{marginLeft:'55px', marginRight: '20px' }}/></a>
+              <a href="https://www.linkedin.com/in/muhamedadil"><img src="src/assets/image.png" alt="linkedin" width="40" height="40"/></a>
+              </div>
             </div>
             <div className="bg-white rounded-lg shadow p-6">
               <h3 className="text-xl font-semibold mb-2">JUMANA JOUHAR</h3>
-              <p className="text-gray-600">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+              <p className="text-gray-600">Third year CSE student with a passion for AI/ML and Data Analytics.</p>
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+              <a href="https://github.com/jumanajouhar"><img src="src/assets/github.png" alt="github" width="40" height="40" style={{marginLeft:'55px', marginRight: '20px' }}/></a>
+              <a href="https://www.linkedin.com/in/jumana-jouhar"><img src="src/assets/image.png" alt="linkedin" width="40" height="40"/></a>
+              </div>
             </div>
             {/* New Team Member */}
             <div className="bg-white rounded-lg shadow p-6">
               <h3 className="text-xl font-semibold mb-2">JIYA MARY JOBY</h3>
-              <p className="text-gray-600">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+              <p className="text-gray-600">I'm a third-year BTech student passionate about web development and ML.</p>
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+              <a href="https://github.com/jiya42"><img src="src/assets/github.png" alt="github" width="40" height="40" style={{marginLeft:'55px', marginRight: '20px' }}/></a>
+              <a href="https://www.linkedin.com/in/jiya-mary-joby"><img src="src/assets/image.png" alt="linkedin" width="40" height="40"/></a>
+              </div>
             </div>
           </div>
         </div>
