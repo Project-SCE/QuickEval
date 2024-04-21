@@ -2,11 +2,12 @@ import React, { useState } from 'react';
 import {  createUserWithEmailAndPassword  } from 'firebase/auth';
 import { auth } from '../firebase';
 import { NavLink, useNavigate } from 'react-router-dom';
-import Navbar from '../components/Navbar';
+import Navbarlogin from '../components/Navbarlogin';
 
 const SignIn = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [name, setName] = useState('');
   const navigate = useNavigate();
   const [error, setError] = useState(null);
   
@@ -18,6 +19,7 @@ const SignIn = () => {
         .then((userCredential) => {
             // Signed in
             const user = userCredential.user;
+            user.displayName = name;
             console.log(user);
             console.log("User created successfully");
             navigate("/login")
@@ -45,7 +47,7 @@ const SignIn = () => {
 
   return (
     <div>
-        <Navbar currentPage="signup"/>
+        <Navbarlogin currentPage="signup"/>
     <div className="min-h-90vh flex items-center justify-center bg-gray-100">
        
       <div className="max-w-md w-full space-y-8">
@@ -57,6 +59,22 @@ const SignIn = () => {
         <form className="mt-8 space-y-6" onSubmit={onSubmit}>
           <input type="hidden" name="remember" defaultValue="true" />
           <div className="rounded-md shadow-sm -space-y-px">
+          <div>
+            <div className="text-xl font-bold font-jakarta-sans text-black-600 mb-2">
+                Full name
+              </div>
+              <input
+                id="name"
+                name="name"
+                type="name"
+                
+                required
+                className="appearance-none rounded-none relative block w-full px-3 py-2 mb-4 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm font-bold font-jakarta-sans"
+                placeholder="Full name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              />
+            </div>
             <div>
             <div className="text-xl font-bold font-jakarta-sans text-black-600 mb-2">
                 Email

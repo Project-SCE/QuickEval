@@ -12,7 +12,7 @@ const Landing = () => {
   return (
     <div>
       <div style={gradientStyle} className="min-h-screen">
-        <Navbar currentPage="home" />
+        <Navbar currentPage="home"  />
         <div className="flex justify-between items-center p-12 h-screen">
           <div className="flex-1">
             <h1 className="text-6xl font-bold mb-4 text-white">NO MORE GRADING HASSLES:</h1>
