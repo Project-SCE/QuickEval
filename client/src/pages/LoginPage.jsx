@@ -129,7 +129,7 @@ const SignIn = () => {
               </a>
             </div>
             
-            {message &&<div className="error-message flex justify-center p-2 bg-red-100 border border-red-400 rounded">
+            { message &&<div className="error-message flex justify-center p-2 bg-red-100 border border-red-400 rounded">
                     <p>{message}</p>
                 </div> }
         </form>

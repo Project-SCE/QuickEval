@@ -3,7 +3,12 @@ import { Navigate } from 'react-router-dom';
 import { useAuth } from '../Authcontext'; // Make sure the path is correct
 
 const ProtectedRoute = ({ children }) => {
-    const { currentUser } = useAuth();
+    
+    const { currentUser, loading } = useAuth();
+    
+    if (loading) {
+        return <div>Loading...</div>; // Or any other loading indicator
+    }
     
     if (!currentUser) {
         // Redirect them to the login page, but save the current location they were trying to go to
