@@ -1,6 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import Navbarnormal from '../components/Navbarnormal'; 
 import { useAuth } from '../Authcontext';
+import axios from 'axios';
+
 
 import * as Bytescale from "@bytescale/sdk";
 
@@ -52,6 +54,7 @@ const NewEvaluatorForm = ({ onSubmit, onClose, currentEvaluator }) => {
   const [title, setTitle] = useState(currentEvaluator ? currentEvaluator.title : '');
   const [questionPaper, setQuestionPaper] = useState(currentEvaluator ? currentEvaluator.questionPaper : null);
   const [scheme, setScheme] = useState(currentEvaluator ? currentEvaluator.scheme : null);
+  const { currentUser } = useAuth(); 
   const [isUploading, setIsUploading] = useState(false);
 
   const formRef = useRef(null);
@@ -86,15 +89,28 @@ const NewEvaluatorForm = ({ onSubmit, onClose, currentEvaluator }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSubmit({ 
-      title, 
-      questionPaper, 
-      scheme, 
-      colorClass: generateBackgroundColor() // Use generated pastel color
+    const educatorId = currentUser.uid; // Access UID from currentUser provided by AuthContext
+
+    const dataToSend = {
+        educatorId: educatorId,
+        title: title,
+        questionPaper: questionPaper,
+        answerKey: scheme,
+    };
+    axios.post('http://localhost:3000/evaluators', dataToSend)
+    .then(response => {
+        console.log('Data saved successfully:', response.data);
+        // Clear the form
+        setTitle('');
+        setQuestionPaper(null);
+        setScheme(null);
+        onClose();
+    })
+    .catch(error => {
+        console.error('Failed to save data:', error);
+        alert("Failed to submit data: " + error.message);
     });
-    setTitle('');
-    setQuestionPaper(null);
-    setScheme(null);
+    
   };
 
   const Spinner = () => (
@@ -162,9 +178,60 @@ const NewEvaluatorForm = ({ onSubmit, onClose, currentEvaluator }) => {
 const EvaluatorPage = () => {
   const [evaluators, setEvaluators] = useState([]);
   const [isFormOpen, setIsFormOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
   const [currentEditingIndex, setCurrentEditingIndex] = useState(null);
 
   const { currentUser } = useAuth();
+  const fetchEvaluators = async () => {
+    setLoading(true);
+    setError('');
+    try {
+        const response = await fetch(`http://localhost:3000/evaluators/${currentUser.uid}`);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        console.log(data);
+        setEvaluators(data);
+    } catch (error) {
+        console.error("Failed to fetch evaluators:", error);
+        setError(`Failed to fetch evaluators: ${error.message}`);
+    } finally {
+        setLoading(false);
+    }
+};
+
+useEffect(() => {
+    const ws = new WebSocket('ws://localhost:8080');
+
+    ws.onopen = () => {
+        console.log("Connected to WebSocket");
+    };
+
+    ws.onmessage = (event) => {
+        const message = JSON.parse(event.data);
+        // Assume server sends a message type that can be checked
+        if (message.type === 'update') {
+            console.log("Data update notification received via WebSocket");
+            fetchEvaluators(); // Re-fetch evaluators to get the latest data
+        }
+    };
+
+    ws.onerror = (error) => {
+        console.error("WebSocket error:", error);
+    };
+
+    ws.onclose = () => {
+        console.log("WebSocket connection closed");
+    };
+
+    fetchEvaluators(); // Fetch initial data
+
+    return () => {
+        ws.close();  // Clean up WebSocket connection on unmount
+    };
+}, []);
 
   
 
@@ -207,7 +274,7 @@ const EvaluatorPage = () => {
             <EvaluatorCard
               key={index}
               title={evaluator.title}
-              colorClass={evaluator.colorClass}
+              //colorClass={evaluator.colorClass}
               onEdit={() => handleEdit(index)}
               onDelete={() => handleDelete(index)}
             />
@@ -216,7 +283,7 @@ const EvaluatorPage = () => {
         </div>
         {isFormOpen && (
           <NewEvaluatorForm
-            onSubmit={addEvaluator}
+            
             onClose={handleClose}
             currentEvaluator={currentEditingIndex !== null ? evaluators[currentEditingIndex] : null}
           />
