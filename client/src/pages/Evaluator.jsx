@@ -36,10 +36,10 @@ const EvaluatorCard = ({ title, onEdit, onDelete, colorClass }) => {
     
       <div className="text-gray-700 text-center text-xl font-semibold">{title}</div>
       <div className="flex justify-center gap-2 mt-4">
-        <button onClick={onEdit} className="text-sm bg-gray-600 hover:bg-gray-700 text-white py-1 px-2 rounded transition duration-300 ease-in-out">
+        <button onClick={(e) => { e.stopPropagation(); onEdit(); }} className="text-sm bg-gray-600 hover:bg-gray-700 text-white py-1 px-2 rounded transition duration-300 ease-in-out">
           Edit
         </button>
-        <button onClick={onDelete} className="text-sm bg-gray-600 hover:bg-gray-700 text-white py-1 px-2 rounded transition duration-300 ease-in-out">
+        <button onClick={(e) => { e.stopPropagation(); onDelete(); }} className="text-sm bg-gray-600 hover:bg-gray-700 text-white py-1 px-2 rounded transition duration-300 ease-in-out">
           Delete
         </button>
       </div>
