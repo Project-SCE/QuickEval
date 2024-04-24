@@ -44,17 +44,7 @@ wss.on('connection', function connection(ws) {
 
 
 app.use("/", evaluatorRouter);
-// app.post('/evaluators', async (req, res) => {
-//     try {
-//         console.log(req.body)
-//         const { educatorId, title, questionPaper, answerKey } = req.body;
-//         const Evaluator1 = new Evaluator({ educatorId, title, questionPaper, answerKey });
-//         await Evaluator1.save();
-//         res.status(201).json(Evaluator1);
-//     } catch (error) {
-//         res.status(400).json({ message: error.message });
-//     }
-// });
+
 
 
 const port = process.env.PORT || 3000;

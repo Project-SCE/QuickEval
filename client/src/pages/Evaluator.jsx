@@ -1,4 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+
 import Navbarnormal from '../components/Navbarnormal'; 
 import { useAuth } from '../Authcontext';
 import axios from 'axios';
@@ -23,8 +25,14 @@ const generateBackgroundColor = () => {
 };
 
 const EvaluatorCard = ({ title, onEdit, onDelete, colorClass }) => {
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    // Navigate to another page and send the title variable along with it
+    navigate(`/answerupload?title=${encodeURIComponent(title)}`);
+  };
   return (
-    <div className={`w-full h-52 ${colorClass} rounded-lg shadow-md flex flex-col items-center justify-center p-4`}>
+    <div className={`w-full h-52 ${colorClass} rounded-lg shadow-md flex flex-col items-center justify-center p-4`} onClick={handleClick}>
     
       <div className="text-gray-700 text-center text-xl font-semibold">{title}</div>
       <div className="flex justify-center gap-2 mt-4">

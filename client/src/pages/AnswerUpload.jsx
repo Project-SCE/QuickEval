@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 
 import * as Bytescale from "@bytescale/sdk";
@@ -9,6 +10,11 @@ const uploadManager = new Bytescale.UploadManager({
 });
 
 const AnswerUpload = () => {
+
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const title = searchParams.get('title');
+
   const [files, setFiles] = useState([]);
   const [uploadedFileUrls, setUploadedFileUrls] = useState([]);
   const [isUploading, setIsUploading] = useState(false);
@@ -103,7 +109,7 @@ const AnswerUpload = () => {
   return (
     <div>
       <Navbar />
-      <div style={labelStyle}>Flat 1</div>
+      <div style={labelStyle}>{title}</div>
       <div style={uploadLabelStyle}>Upload answer paper</div>
       <input
         type="file"
