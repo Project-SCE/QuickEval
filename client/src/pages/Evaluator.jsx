@@ -183,55 +183,26 @@ const EvaluatorPage = () => {
   const [currentEditingIndex, setCurrentEditingIndex] = useState(null);
 
   const { currentUser } = useAuth();
-  const fetchEvaluators = async () => {
-    setLoading(true);
-    setError('');
-    try {
-        const response = await fetch(`http://localhost:3000/evaluators/${currentUser.uid}`);
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const data = await response.json();
-        console.log(data);
-        setEvaluators(data);
-    } catch (error) {
-        console.error("Failed to fetch evaluators:", error);
-        setError(`Failed to fetch evaluators: ${error.message}`);
-    } finally {
-        setLoading(false);
-    }
-};
-
+  
 useEffect(() => {
-    const ws = new WebSocket('ws://localhost:8080');
+  const fetchEvaluators = async () => {
+    try {
+      const response = await fetch(`http://localhost:3000/evaluators/${currentUser.uid}`);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
+      setEvaluators(data);
+    } catch (error) {
+      console.error("Failed to fetch evaluators:", error);
+    }
+  };
 
-    ws.onopen = () => {
-        console.log("Connected to WebSocket");
-    };
+  fetchEvaluators(); // Initial fetch
+  const intervalId = setInterval(fetchEvaluators, 5000); // Poll every 5 seconds
 
-    ws.onmessage = (event) => {
-        const message = JSON.parse(event.data);
-        // Assume server sends a message type that can be checked
-        if (message.type === 'update') {
-            console.log("Data update notification received via WebSocket");
-            fetchEvaluators(); // Re-fetch evaluators to get the latest data
-        }
-    };
-
-    ws.onerror = (error) => {
-        console.error("WebSocket error:", error);
-    };
-
-    ws.onclose = () => {
-        console.log("WebSocket connection closed");
-    };
-
-    fetchEvaluators(); // Fetch initial data
-
-    return () => {
-        ws.close();  // Clean up WebSocket connection on unmount
-    };
-}, []);
+  return () => clearInterval(intervalId); // Cleanup on unmount
+}, [currentUser.uid]);
 
   
 

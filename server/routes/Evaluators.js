@@ -11,19 +11,8 @@ router.post('/evaluators', async (req, res) => {
         console.log(req.body)
         const { educatorId, title, questionPaper, answerKey } = req.body;
         const Evaluator1 = new Evaluator({ educatorId, title, questionPaper, answerKey });
-        await Evaluator1.save((err, evaluator) => {
-            if (err) {
-                res.status(500).send(err);
-            } else {
-                res.status(201).json(evaluator);
-                // Broadcast new evaluator to all connected WebSocket clients
-                wss.clients.forEach(function each(client) {
-                    if (client.readyState === WebSocket.OPEN) {
-                        client.send(JSON.stringify(evaluator));
-                    }
-                });
-            }
-        });
+        await Evaluator1.save();
+        res.status(201).json(Evaluator1);
     } catch (error) {
         res.status(400).json({ message: error.message });
     }
@@ -33,7 +22,7 @@ router.post('/evaluators', async (req, res) => {
 router.get('/evaluators/:educatorId', async (req, res) => {
     try {
         const { educatorId } = req.params;
-        const evaluator = await Evaluator.findOne({ educatorId: educatorId });
+        const evaluator = await Evaluator.find({ educatorId: educatorId });
         if (!evaluator) {
             return res.status(404).json({ message: "Evaluator not found" });
         }
