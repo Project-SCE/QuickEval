@@ -4,7 +4,7 @@ import Landing from './pages/Landing'; // Adjust the import path as necessary
 import LoginPage from './pages/LoginPage';
 import SignUp from './pages/SignUp';
 import Review from './pages/ReviewPage'; // Adjust the import path as necessary
-
+import AnswerUpload from './pages/AnswerUpload'; // Adjust the import path as necessary
 import EvaluatorPage from './pages/Evaluator';
 import {auth} from './firebase';
 import { AuthProvider } from './Authcontext';
@@ -19,6 +19,7 @@ function App() {
         <Route path="/" element={<Landing />} />  // Now LandingPage is at root
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignUp />} />
+        <Route path='/answerupload' element={<AnswerUpload/>}></Route>
 
         <Route path="/review" element={<Review />} />
 
