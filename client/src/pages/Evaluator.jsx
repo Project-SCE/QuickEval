@@ -56,6 +56,7 @@ const NewEvaluatorForm = ({ onSubmit, onClose, currentEvaluator }) => {
   const [scheme, setScheme] = useState(currentEvaluator ? currentEvaluator.scheme : null);
   const { currentUser } = useAuth(); 
   const [isUploading, setIsUploading] = useState(false);
+  
 
   const formRef = useRef(null);
 
@@ -86,7 +87,7 @@ const NewEvaluatorForm = ({ onSubmit, onClose, currentEvaluator }) => {
       setIsUploading(false); // Indicate upload has ended
     }
   }
-
+  
   const handleSubmit = (e) => {
     e.preventDefault();
     const educatorId = currentUser.uid; // Access UID from currentUser provided by AuthContext
@@ -97,21 +98,45 @@ const NewEvaluatorForm = ({ onSubmit, onClose, currentEvaluator }) => {
         questionPaper: questionPaper,
         answerKey: scheme,
     };
-    axios.post('http://localhost:3000/evaluators', dataToSend)
+    let url = 'http://localhost:3000/evaluators';
+    let method = 'post';
+
+    if (currentEvaluator) {
+        // If currentEvaluator exists, it means we're updating an existing evaluator
+        url = `http://localhost:3000/evaluators/${currentEvaluator._id}`;
+        method = 'put';
+    }
+
+    axios({
+        method: method,
+        url: url,
+        data: dataToSend
+    })
     .then(response => {
-        console.log('Data saved successfully:', response.data);
-        // Clear the form
-        setTitle('');
-        setQuestionPaper(null);
-        setScheme(null);
-        onClose();
+        if (currentEvaluator) {
+            console.log('Data updated successfully:', response.data);
+            onClose();
+        } else {
+            console.log('Data saved successfully:', response.data);
+            // Clear the form
+            setTitle('');
+            setQuestionPaper(null);
+            setScheme(null);
+            onClose();
+        }
     })
     .catch(error => {
-        console.error('Failed to save data:', error);
-        alert("Failed to submit data: " + error.message);
+        if (currentEvaluator) {
+            console.error('Failed to update data:', error);
+            alert("Failed to update data: " + error.message);
+        } else {
+            console.error('Failed to save data:', error);
+            alert("Failed to submit data: " + error.message);
+        }
     });
     
   };
+
 
   const Spinner = () => (
     <div className="flex items-center justify-center">
@@ -218,14 +243,49 @@ useEffect(() => {
     setIsFormOpen(false);
   };
 
-  const handleEdit = (index) => {
+  const handleEdit = async (evaluator,index) => {
     setCurrentEditingIndex(index);
     setIsFormOpen(true);
-  };
+    try {
+        const updatedData = {
+            educatorId: evaluator.educatorId,
+            title: evaluator.title,
+            questionPaper:evaluator.questionPaper,
+            answerKey: evaluator.answerKey
+        };
 
-  const handleDelete = (index) => {
-    setEvaluators(prevEvaluators => prevEvaluators.filter((_, idx) => idx !== index));
-  };
+        // Assuming you have access to the current item data, you can get the ID
+        const id = evaluator._id;
+
+        // Make PUT request to update the item
+        const response = await axios.put(`/evaluators/${id}`, updatedData);
+
+        // Handle success
+        console.log('Item updated successfully:', response.data);
+        // Optionally, you can update the state or perform any other actions after successful update
+
+        // Close the edit form or perform any other necessary actions
+        setIsFormOpen(false);
+    } catch (error) {
+        // Handle error
+        console.error('Error updating item:', error);
+        // Optionally, you can show an error message to the user or perform any other actions upon error
+    }
+};
+
+  const handleDelete = (id, index) => {
+    axios.delete(`http://localhost:3000/evaluators/${id}`)
+    .then(response => {
+        // Assuming the server sends back a success message
+        console.log(response.data.message);
+        // Update state to remove the evaluator from the list
+        setEvaluators(prevEvaluators => prevEvaluators.filter((_, idx) => idx !== index));
+    })
+    .catch(error => {
+        // Handle any errors here
+        console.error('Delete request failed:', error);
+    });
+};
 
   const handleClose = () => {
     setIsFormOpen(false);
@@ -246,8 +306,8 @@ useEffect(() => {
               key={index}
               title={evaluator.title}
               //colorClass={evaluator.colorClass}
-              onEdit={() => handleEdit(index)}
-              onDelete={() => handleDelete(index)}
+              onEdit={() => handleEdit(evaluator,index)}
+              onDelete={() => handleDelete(evaluator._id,index)}
             />
           ))}
 
