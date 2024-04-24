@@ -18,4 +18,43 @@ router.post('/evaluators', async (req, res) => {
     }
 });
 
+// GET route to fetch all evaluators
+router.get('/evaluators/:educatorId', async (req, res) => {
+    try {
+        const { educatorId } = req.params;
+        const evaluator = await Evaluator.find({ educatorId: educatorId });
+        if (!evaluator) {
+            return res.status(404).json({ message: "Evaluator not found" });
+        }
+        res.status(200).json(evaluator);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
+
+// PUT route to update an evaluator
+router.put('/evaluators/:id', async (req, res) => {
+    const { id } = req.params;
+    const { educatorId, title, questionPaper, answerKey } = req.body;
+    try {
+        const updatedEvaluator = await Evaluator.findByIdAndUpdate(id, { educatorId, title, questionPaper, answerKey }, { new: true });
+        res.status(200).json(updatedEvaluator);
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+}); 
+
+// DELETE route to delete an evaluator
+router.delete('/evaluators/:id', async (req, res) => {
+    const { id } = req.params;
+    try {
+        await Evaluator.findByIdAndDelete(id);
+        res.status(200).json({ message: 'Evaluator deleted successfully' });
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+});
+
+
 module.exports = router;
