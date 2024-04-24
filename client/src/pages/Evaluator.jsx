@@ -1,6 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import Navbarnormal from '../components/Navbarnormal'; 
 import { useAuth } from '../Authcontext';
+import axios from 'axios';
+
 
 import * as Bytescale from "@bytescale/sdk";
 
@@ -52,7 +54,9 @@ const NewEvaluatorForm = ({ onSubmit, onClose, currentEvaluator }) => {
   const [title, setTitle] = useState(currentEvaluator ? currentEvaluator.title : '');
   const [questionPaper, setQuestionPaper] = useState(currentEvaluator ? currentEvaluator.questionPaper : null);
   const [scheme, setScheme] = useState(currentEvaluator ? currentEvaluator.scheme : null);
+  const { currentUser } = useAuth(); 
   const [isUploading, setIsUploading] = useState(false);
+  
 
   const formRef = useRef(null);
 
@@ -83,19 +87,56 @@ const NewEvaluatorForm = ({ onSubmit, onClose, currentEvaluator }) => {
       setIsUploading(false); // Indicate upload has ended
     }
   }
-
+  
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSubmit({ 
-      title, 
-      questionPaper, 
-      scheme, 
-      colorClass: generateBackgroundColor() // Use generated pastel color
+    const educatorId = currentUser.uid; // Access UID from currentUser provided by AuthContext
+
+    const dataToSend = {
+        educatorId: educatorId,
+        title: title,
+        questionPaper: questionPaper,
+        answerKey: scheme,
+    };
+    let url = 'http://localhost:3000/evaluators';
+    let method = 'post';
+
+    if (currentEvaluator) {
+        // If currentEvaluator exists, it means we're updating an existing evaluator
+        url = `http://localhost:3000/evaluators/${currentEvaluator._id}`;
+        method = 'put';
+    }
+
+    axios({
+        method: method,
+        url: url,
+        data: dataToSend
+    })
+    .then(response => {
+        if (currentEvaluator) {
+            console.log('Data updated successfully:', response.data);
+            onClose();
+        } else {
+            console.log('Data saved successfully:', response.data);
+            // Clear the form
+            setTitle('');
+            setQuestionPaper(null);
+            setScheme(null);
+            onClose();
+        }
+    })
+    .catch(error => {
+        if (currentEvaluator) {
+            console.error('Failed to update data:', error);
+            alert("Failed to update data: " + error.message);
+        } else {
+            console.error('Failed to save data:', error);
+            alert("Failed to submit data: " + error.message);
+        }
     });
-    setTitle('');
-    setQuestionPaper(null);
-    setScheme(null);
+    
   };
+
 
   const Spinner = () => (
     <div className="flex items-center justify-center">
@@ -162,9 +203,31 @@ const NewEvaluatorForm = ({ onSubmit, onClose, currentEvaluator }) => {
 const EvaluatorPage = () => {
   const [evaluators, setEvaluators] = useState([]);
   const [isFormOpen, setIsFormOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
   const [currentEditingIndex, setCurrentEditingIndex] = useState(null);
 
   const { currentUser } = useAuth();
+  
+useEffect(() => {
+  const fetchEvaluators = async () => {
+    try {
+      const response = await fetch(`http://localhost:3000/evaluators/${currentUser.uid}`);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
+      setEvaluators(data);
+    } catch (error) {
+      console.error("Failed to fetch evaluators:", error);
+    }
+  };
+
+  fetchEvaluators(); // Initial fetch
+  const intervalId = setInterval(fetchEvaluators, 5000); // Poll every 5 seconds
+
+  return () => clearInterval(intervalId); // Cleanup on unmount
+}, [currentUser.uid]);
 
   
 
@@ -180,14 +243,49 @@ const EvaluatorPage = () => {
     setIsFormOpen(false);
   };
 
-  const handleEdit = (index) => {
+  const handleEdit = async (evaluator,index) => {
     setCurrentEditingIndex(index);
     setIsFormOpen(true);
-  };
+    try {
+        const updatedData = {
+            educatorId: evaluator.educatorId,
+            title: evaluator.title,
+            questionPaper:evaluator.questionPaper,
+            answerKey: evaluator.answerKey
+        };
 
-  const handleDelete = (index) => {
-    setEvaluators(prevEvaluators => prevEvaluators.filter((_, idx) => idx !== index));
-  };
+        // Assuming you have access to the current item data, you can get the ID
+        const id = evaluator._id;
+
+        // Make PUT request to update the item
+        const response = await axios.put(`/evaluators/${id}`, updatedData);
+
+        // Handle success
+        console.log('Item updated successfully:', response.data);
+        // Optionally, you can update the state or perform any other actions after successful update
+
+        // Close the edit form or perform any other necessary actions
+        setIsFormOpen(false);
+    } catch (error) {
+        // Handle error
+        console.error('Error updating item:', error);
+        // Optionally, you can show an error message to the user or perform any other actions upon error
+    }
+};
+
+  const handleDelete = (id, index) => {
+    axios.delete(`http://localhost:3000/evaluators/${id}`)
+    .then(response => {
+        // Assuming the server sends back a success message
+        console.log(response.data.message);
+        // Update state to remove the evaluator from the list
+        setEvaluators(prevEvaluators => prevEvaluators.filter((_, idx) => idx !== index));
+    })
+    .catch(error => {
+        // Handle any errors here
+        console.error('Delete request failed:', error);
+    });
+};
 
   const handleClose = () => {
     setIsFormOpen(false);
@@ -207,16 +305,16 @@ const EvaluatorPage = () => {
             <EvaluatorCard
               key={index}
               title={evaluator.title}
-              colorClass={evaluator.colorClass}
-              onEdit={() => handleEdit(index)}
-              onDelete={() => handleDelete(index)}
+              //colorClass={evaluator.colorClass}
+              onEdit={() => handleEdit(evaluator,index)}
+              onDelete={() => handleDelete(evaluator._id,index)}
             />
           ))}
 
         </div>
         {isFormOpen && (
           <NewEvaluatorForm
-            onSubmit={addEvaluator}
+            
             onClose={handleClose}
             currentEvaluator={currentEditingIndex !== null ? evaluators[currentEditingIndex] : null}
           />
