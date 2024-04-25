@@ -56,5 +56,17 @@ router.delete('/evaluators/:id', async (req, res) => {
     }
 });
 
+router.post('/evaluations', async (req, res) => {
+    try {
+        console.log(req.body)
+        const { evaluatorId, data, answerSheet } = req.body;
+        const newEvaluation = new Evaluation({ evaluatorId, data, answerSheet });
+        await newEvaluation.save();
+        res.status(201).json(newEvaluation);
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+});
 
 module.exports = router;
+

@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import Navbar from '../components/Navbar';
-
+import axios from 'axios';
 import * as Bytescale from "@bytescale/sdk";
 
-
+// Initialize Bytescale Upload Manager with the API key
 const uploadManager = new Bytescale.UploadManager({
-  apiKey: import.meta.env.VITE_BYTESCALE_API_KEY // This is your API key.
+  apiKey: import.meta.env.VITE_BYTESCALE_API_KEY
 });
 
 const AnswerUpload = () => {
@@ -13,15 +13,17 @@ const AnswerUpload = () => {
   const [uploadedFileUrls, setUploadedFileUrls] = useState([]);
   const [isUploading, setIsUploading] = useState(false);
 
+  // Handle file selection
   const handleFileChange = async (event) => {
     const selectedFiles = Array.from(event.target.files);
+    setFiles(selectedFiles);
     const uploadedUrls = [];
     setIsUploading(true);
-    // Loop through each selected file to upload
+
+    // Upload each selected file
     for (const file of selectedFiles) {
       try {
         const { fileUrl } = await uploadManager.upload({ data: file });
-        //console.log(fileUrl);
         uploadedUrls.push({ name: file.name, url: fileUrl });
       } catch (e) {
         alert(`Error uploading ${file.name}: ${e.message}`);
@@ -29,20 +31,28 @@ const AnswerUpload = () => {
     }
 
     setIsUploading(false);
-    // Update state with uploaded file URLs
     setUploadedFileUrls((prevUrls) => [...prevUrls, ...uploadedUrls]);
   };
 
-  const handleUpload = () => {
-    // Perform upload logic with the selected files
-    if (files.length > 0) {
-      console.log('Uploading files:', files);
-      // Add your upload logic here
+  // Handle upload submission
+  const handleUpload = async () => {
+    if (uploadedFileUrls.length > 0) {
+      try {
+        const response = await axios.post('http://localhost:5000/api/evaluations', {
+          evaluatorId: 'some-evaluator-id', // This should be dynamically set
+          data: uploadedFileUrls,
+          answerSheet: uploadedFileUrls.map(file => file.url), // Store all URLs
+        });
+        alert('Upload successful!');
+      } catch (error) {
+        alert('Failed to upload: ' + error.message);
+      }
     } else {
-      console.log('No files selected');
+      alert('No files selected');
     }
   };
 
+  // Styling
   const labelStyle = {
     position: 'absolute',
     top: '75px',
@@ -51,19 +61,19 @@ const AnswerUpload = () => {
     fontFamily: 'Jakarta Sans, sans-serif',
     fontWeight: 'bold',
     padding: '5px 10px',
-    zIndex: '9999', // To ensure the label is on top of other elements
-    fontSize: '30px', // Larger font size
+    zIndex: '9999',
+    fontSize: '30px',
   };
 
   const uploadLabelStyle = {
     position: 'absolute',
-    top: '25vh', // Adjust as needed
+    top: '25vh',
     left: '20px',
     color: '#000',
     fontFamily: 'Jakarta Sans, sans-serif',
     padding: '5px 10px',
-    zIndex: '9999', // To ensure the label is on top of other elements
-    fontSize: '23px', // Adjust as needed
+    zIndex: '9999',
+    fontSize: '23px',
   };
 
   const buttonStyle = {
@@ -75,9 +85,9 @@ const AnswerUpload = () => {
     border: 'none',
     cursor: 'pointer',
     position: 'absolute',
-    top: 'calc(25vh + 50px + 1cm)', // Adjust as needed
+    top: 'calc(25vh + 50px + 1cm)',
     left: '20px',
-    zIndex: '9999', // To ensure the button is on top of other elements
+    zIndex: '9999',
   };
 
   const evaluateButtonStyle = {
@@ -89,11 +99,12 @@ const AnswerUpload = () => {
     border: 'none',
     cursor: 'pointer',
     position: 'absolute',
-    top: 'calc(25vh + 50px + 7cm)', // Adjust as needed
+    top: 'calc(25vh + 50px + 7cm)',
     left: '50%',
-    transform: 'translateX(-50%)', // Center the button horizontally
-    zIndex: '9999', // To ensure the button is on top of other elements
+    transform: 'translateX(-50%)',
+    zIndex: '9999',
   };
+
   const Spinner = () => (
     <div className="flex items-center justify-center">
       <div className="w-16 h-16 border-b-2 border-gray-900 rounded-full animate-spin"></div>
@@ -108,19 +119,17 @@ const AnswerUpload = () => {
       <input
         type="file"
         onChange={handleFileChange}
-        style={{ display: 'none' }} // Hide the input element visually
+        style={{ display: 'none' }}
         accept=".png,.jpeg,.jpg"
-        multiple // Allow multiple file selection
+        multiple
       />
       <button style={buttonStyle} onClick={() => document.querySelector('input[type="file"]').click()}>
         Upload(s)
       </button>
-
       <button style={evaluateButtonStyle} onClick={handleUpload}>
         Evaluate
       </button>
-      
-      {/* Render the names of uploaded files */}
+
       <div style={{ marginTop: '16rem' }}>
         {isUploading && <Spinner />}
         {uploadedFileUrls.length > 0 && (
@@ -133,7 +142,6 @@ const AnswerUpload = () => {
           </ul>
         )}
       </div>
-      {/* Your other content goes here */}
     </div>
   );
 };
