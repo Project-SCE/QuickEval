@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import Navbar from '../components/Navbar';
+import { FiCheckCircle, FiUpload } from "react-icons/fi";
+import { ToastContainer, toast } from "react-toastify";
+import axios from "axios";
 
 import * as Bytescale from "@bytescale/sdk";
 
@@ -14,10 +17,16 @@ const AnswerUpload = () => {
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const title = searchParams.get('title');
+  const evaluatorId = searchParams.get('evaluatorId');
+
+  console.log("evaluator id"+evaluatorId);
 
   const [files, setFiles] = useState([]);
   const [uploadedFileUrls, setUploadedFileUrls] = useState([]);
   const [isUploading, setIsUploading] = useState(false);
+  const [answerSheets, setAnswerSheets] = useState([]);
+  const [results, setResults] = useState([]);
+
 
   const handleFileChange = async (event) => {
     const selectedFiles = Array.from(event.target.files);
@@ -27,8 +36,9 @@ const AnswerUpload = () => {
     for (const file of selectedFiles) {
       try {
         const { fileUrl } = await uploadManager.upload({ data: file });
-        //console.log(fileUrl);
-        uploadedUrls.push({ name: file.name, url: fileUrl });
+        
+        uploadedUrls.push({ name: file.name, url: fileUrl } );
+        
       } catch (e) {
         alert(`Error uploading ${file.name}: ${e.message}`);
       }
@@ -37,10 +47,56 @@ const AnswerUpload = () => {
     setIsUploading(false);
     // Update state with uploaded file URLs
     setUploadedFileUrls((prevUrls) => [...prevUrls, ...uploadedUrls]);
+    setAnswerSheets((prevUrls) => [...prevUrls, ...uploadedUrls.map(item => item.url)])
+  };
+  
+  const valuate = async (answerSheet) => {
+    const config = {
+      method: "POST",
+      url: "http://localhost:3000/evaluators/evaluate",
+      headers: {
+        
+        "Content-Type": `application/json`,
+      },
+      data: {
+        evaluatorId: evaluatorId,
+        answerSheet: answerSheet,
+      }
+    };
+
+    var response = await axios(config);
+    console.log(response.data)
+
+    setResults([...results, response.data]);
+
+    localStorage.setItem("results", JSON.stringify(results));
+
+    return;
+  }
+
+  const [currentValuatingSheet, setCurrentValuatingSheet] = useState(1);
+  const [valuating, setValuating] = useState(false);
+
+  const valuateAnswerSheets = async () => {
+    (document.getElementById("valuation_modal")).showModal();
+    setValuating(true);
+    for (const answerSheet of answerSheets) {
+      await valuate(answerSheet.url); 
+      setCurrentValuatingSheet(currentValuatingSheet + 1);
+    }
+
+    toast.success("Valuation completed");
+    setValuating(false);
+    (document.getElementById("valuation_modal")).close();
+
+    setTimeout(() => {
+      window.location.href = `/review`;
+    }, 1000);
   };
 
   const handleUpload = () => {
     // Perform upload logic with the selected files
+    console.log("answerpaper urls "+answerSheets)
     if (files.length > 0) {
       console.log('Uploading files:', files);
       // Add your upload logic here
@@ -122,7 +178,8 @@ const AnswerUpload = () => {
         Upload(s)
       </button>
 
-      <button style={evaluateButtonStyle} onClick={handleUpload}>
+      <button style={evaluateButtonStyle} onClick={() => {
+            valuateAnswerSheets();}}>
         Evaluate
       </button>
       
@@ -140,6 +197,21 @@ const AnswerUpload = () => {
         )}
       </div>
       {/* Your other content goes here */}
+      <dialog id="valuation_modal" className="modal">
+        <div className="modal-box max-w-2xl align-middle">
+          <h3 className="flex items-center font-bold text-2xl mb-5">
+            <FiCheckCircle className="mr-2" /> Valuating Answer Sheets
+          </h3>
+          <div className="my-10 flex flex-col items-center justify-center">
+            <span className="loading loading-spinner loading-lg mb-10"></span>
+            <p className="text-lg mb-5">Valuating Answer Sheet {currentValuatingSheet} of {answerSheets?.length}</p>
+            <progress className="progress mb-5 w-[20vw]" value={currentValuatingSheet / answerSheets?.length * 100} max="100"></progress>
+          </div>
+        </div>
+        <form method="dialog" className="modal-backdrop">
+          <button>close</button>
+        </form>
+      </dialog>
     </div>
   );
 };

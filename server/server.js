@@ -13,7 +13,7 @@ const wss = new WebSocket.Server({ port: 8080 });
 const app = express();
 app.use(express.json());
 app.use(cors());
-console.log(Evaluator);
+
 
 async function connectDB() {
     await mongoose.connect(process.env.DB_URL);
