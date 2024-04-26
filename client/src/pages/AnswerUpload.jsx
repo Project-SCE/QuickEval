@@ -19,7 +19,7 @@ const AnswerUpload = () => {
   const title = searchParams.get('title');
   const evaluatorId = searchParams.get('evaluatorId');
 
-  console.log("evaluator id"+evaluatorId);
+ 
 
   const [files, setFiles] = useState([]);
   const [uploadedFileUrls, setUploadedFileUrls] = useState([]);
@@ -65,9 +65,10 @@ const AnswerUpload = () => {
         answerSheet: answerSheet,
       }
     };
+    console.log(answerSheet)
 
     var response = await axios(config);
-    console.log(response.data)
+    // console.log(response.data)
 
     setResults([...results, response.data]);
 
@@ -82,8 +83,9 @@ const AnswerUpload = () => {
   const valuateAnswerSheets = async () => {
     (document.getElementById("valuation_modal")).showModal();
     setValuating(true);
+    console.log(answerSheets)
     for (const answerSheet of answerSheets) {
-      await valuate(answerSheet.url); 
+      await valuate(answerSheet); 
       setCurrentValuatingSheet(currentValuatingSheet + 1);
     }
 
