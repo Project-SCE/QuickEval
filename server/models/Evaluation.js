@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+const mongoose = require("mongoose");
 
 const EvaluationSchema = new mongoose.Schema({
   evaluatorId: {
@@ -19,4 +19,4 @@ const EvaluationSchema = new mongoose.Schema({
 
 const Evaluation = mongoose.model("Evaluation", EvaluationSchema);
 
-export default Evaluation;
+module.exports = Evaluation;

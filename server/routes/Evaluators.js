@@ -2,6 +2,9 @@ const express= require("express") ;
 const Evaluator = require('../models/Evaluator');
 const e = require("express");
 const EvaluatorSchema = require('../utils/types').EvaluatorSchema;
+const OpenAI = require("openai");
+const aiPrompt = require("../utils/utils.js");
+const Valuation = require("../models/Evaluation.js");
 
 const router = express.Router();
 
@@ -95,12 +98,69 @@ router.delete('/evaluators/:id', async (req, res) => {
 });
 
 router.post('/evaluators/evaluate', async (req, res) => {
-    
-    const { evaluatorId,answerSheet } = req.body;
-    console.log(evaluatorId);
-    res.json({ message: "Success", data: { evaluatorId: evaluatorId, answerSheet: answerSheet } });
+    try {
+        const { evaluatorId, answerSheet } = req.body; // Ensure answerSheet is the URL of the uploaded image
+        const evaluator = await Evaluator.findById(evaluatorId);
 
+        if (!evaluator) {
+            return res.status(404).json({ message: "Evaluator not found" });
+        }
+
+        const openai = new OpenAI({
+            apiKey: process.env.OPENAI_API_KEY
+        });
+
+        const completion = await openai.chat.completions.create({
+            model: "gpt-4-vision-preview",
+            messages: [
+                {
+                    role: "system",
+                    content: "Evaluate the answer sheet using the question paper and answer key provided."
+                },
+                {
+                    role: "user",
+                    content: [
+                        { type: "text", text: "Question Paper:" },
+                        { type: "image_url", image_url: evaluator.questionPaper }
+                    ]
+                },
+                {
+                    role: "user",
+                    content: [
+                        { type: "text", text: "Answer Key:" },
+                        { type: "image_url", image_url: evaluator.answerKey }
+                    ]
+                },
+                {
+                    role: "user",
+                    content: [
+                        { type: "text", text: "Answer Sheet:" },
+                        { type: "image_url", image_url: answerSheet }
+                    ]
+                }
+            ]
+        });
+
+        // Assuming the API returns data as stringified JSON in the message content
+        const valuationData = JSON.parse(completion.choices[0].message.content);
+
+        console.log("Valuation Data:", valuationData); // Print the output to the console
+
+        const newValuation = new Valuation({
+            evaluatorId,
+            data: valuationData,
+            answerSheet
+        });
+
+        await newValuation.save();
+        res.json({ message: "Success", data: valuationData });
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: error.message });
+    }
 });
+
 
 
 module.exports = router;
