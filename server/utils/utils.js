@@ -9,7 +9,7 @@ Your task is to grade the answer sheet and return it in JSON format.
 
 Provide the response in a JSON format that contains:
 
-student_name: the student's name from the answer sheet (if provided, otherwise empty string)
+student_name: the student's name from the answer sheet (read the name carefully as it is donot assume name if provided, otherwise empty string)
 class: the student's class from the answer sheet (if provided, otherwise empty string)
 roll_no: the student's roll number from the answer sheet (if provided, otherwise empty string)
 

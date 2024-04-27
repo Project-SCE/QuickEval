@@ -65,16 +65,19 @@ const AnswerUpload = () => {
         answerSheet: answerSheet,
       }
     };
-    console.log(answerSheet)
+    
 
     var response = await axios(config);
-    // console.log(response.data)
+    
 
-    setResults([...results, response.data]);
+     // Retrieve existing results from localStorage
+     
+     const updatedResults = [...results, response.data];
+     // Optionally, update state or perform any other necessary actions
+     setResults(updatedResults);
+     console.log(results)
 
-    localStorage.setItem("results", JSON.stringify(results));
-
-    return;
+    return response.data;
   }
 
   const [currentValuatingSheet, setCurrentValuatingSheet] = useState(1);
@@ -85,7 +88,11 @@ const AnswerUpload = () => {
     setValuating(true);
     console.log(answerSheets)
     for (const answerSheet of answerSheets) {
-      await valuate(answerSheet); 
+      const data = await valuate(answerSheet); 
+      const existingResults = JSON.parse(localStorage.getItem("results")) || [];
+      // Append the new result to the existing results
+     const updatedResults = [...existingResults, data];
+     localStorage.setItem("results", JSON.stringify(updatedResults));
       setCurrentValuatingSheet(currentValuatingSheet + 1);
     }
 
@@ -93,9 +100,9 @@ const AnswerUpload = () => {
     setValuating(false);
     (document.getElementById("valuation_modal")).close();
 
-    setTimeout(() => {
-      window.location.href = `/review`;
-    }, 1000);
+    // setTimeout(() => {
+    //   window.location.href = `/review`;
+    // }, 1000);
   };
 
   const handleUpload = () => {

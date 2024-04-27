@@ -1,11 +1,13 @@
 const express= require("express") ;
 const Evaluator = require('../models/Evaluator');
+require('dotenv').config();
 
 const EvaluatorSchema = require('../utils/types').EvaluatorSchema;
 const OpenAI = require("openai");
 const aiPrompt = require("../utils/utils.js");
 const Valuation = require("../models/Evaluation.js");
 const e = require("express");
+
 
 const router = express.Router();
 
@@ -110,7 +112,7 @@ router.post('/evaluators/evaluate', async (req, res) => {
         console.log("answer"+answerSheet)
 
         const openai = new OpenAI({
-            apiKey:process.env.OPENAI_API_KEY,
+            apiKey:process.env.OPENAI_API_KEY1,
         });
 
         const completion = await openai.chat.completions.create({
@@ -148,9 +150,10 @@ router.post('/evaluators/evaluate', async (req, res) => {
 
         
         // Assuming the API returns data as stringified JSON in the message content
-        const valuationData = completion.choices[0].message.content;
-
+        
+        const valuationData = completion.choices[0].message.content
         console.log("Valuation Data:", valuationData); // Print the output to the console
+        const valuationDataString = JSON.stringify(valuationData);
 
         const newValuation = new Valuation({
             evaluatorId,

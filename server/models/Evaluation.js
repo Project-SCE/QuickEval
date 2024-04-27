@@ -5,10 +5,10 @@ const EvaluationSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  data: [{
-    name: String,
-    url: String,
-  }],
+  data:  {
+    type: Object,
+    required: true
+ },
   answerSheet: {
     type: String,
     required: true

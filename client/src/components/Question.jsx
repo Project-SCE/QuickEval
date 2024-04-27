@@ -13,7 +13,7 @@ const confidenceColor = (confidence) => {
   }
 };
 
-const Question = ({ id, question, marks, totalMarks, confidence }) => {
+const Question = ({ id, question,answer,remarks, marks, totalMarks, confidence }) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
   // Stop the event from bubbling up to the parent div
@@ -36,18 +36,10 @@ const Question = ({ id, question, marks, totalMarks, confidence }) => {
       </div>
       {isExpanded && (
         <>
-          <textarea
-            className="w-full shadow appearance-none border rounded py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-            rows="3"
-            placeholder="Student answer"
-            onClick={handleInputClick}
-          ></textarea>
-          <textarea
-            className="w-full shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            rows="3"
-            placeholder="Feedback"
-            onClick={handleInputClick}
-          ></textarea>
+          <h1>Answer</h1>
+          <h3 className="text-sm font-semibold"> {answer}</h3>
+          <h1>Feedback</h1>
+          <h3 className="text-sm font-semibold"> {remarks}</h3>
           <input
             type="number"
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mt-3 mb-6 leading-tight focus:outline-none focus:shadow-outline"
