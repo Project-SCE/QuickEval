@@ -100,9 +100,9 @@ const AnswerUpload = () => {
     setValuating(false);
     (document.getElementById("valuation_modal")).close();
 
-    // setTimeout(() => {
-    //   window.location.href = `/review`;
-    // }, 1000);
+     setTimeout(() => {
+       window.location.href = `/review`;
+     }, 1000);
   };
 
   const handleUpload = () => {
