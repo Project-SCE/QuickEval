@@ -24,12 +24,12 @@ const generateBackgroundColor = () => {
   return colors[Math.floor(Math.random() * colors.length)];
 };
 
-const EvaluatorCard = ({ title, onEdit, onDelete, colorClass }) => {
+const EvaluatorCard = ({ title,evaluatorId, onEdit, onDelete, colorClass }) => {
   const navigate = useNavigate();
 
   const handleClick = () => {
     // Navigate to another page and send the title variable along with it
-    navigate(`/answerupload?title=${encodeURIComponent(title)}`);
+    navigate(`/answerupload?title=${encodeURIComponent(title)}&evaluatorId=${encodeURIComponent(evaluatorId)}`);
   };
   return (
     <div className={`w-full h-52 ${colorClass} rounded-lg shadow-md flex flex-col items-center justify-center p-4`} onClick={handleClick}>
@@ -313,6 +313,7 @@ useEffect(() => {
             <EvaluatorCard
               key={index}
               title={evaluator.title}
+              evaluatorId={evaluator._id}
               //colorClass={evaluator.colorClass}
               onEdit={() => handleEdit(evaluator,index)}
               onDelete={() => handleDelete(evaluator._id,index)}
