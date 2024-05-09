@@ -24,7 +24,7 @@ const generateBackgroundColor = () => {
   return colors[Math.floor(Math.random() * colors.length)];
 };
 
-const EvaluatorCard = ({ title,evaluatorId, onEdit, onDelete, colorClass }) => {
+const EvaluatorCard = ({ title,evaluatorId, onEdit, onDelete,onReview,colorClass }) => {
   const navigate = useNavigate();
 
   const handleClick = () => {
@@ -32,7 +32,7 @@ const EvaluatorCard = ({ title,evaluatorId, onEdit, onDelete, colorClass }) => {
     navigate(`/answerupload?title=${encodeURIComponent(title)}&evaluatorId=${encodeURIComponent(evaluatorId)}`);
   };
   return (
-    <div className={`w-full h-52 ${colorClass} rounded-lg shadow-md flex flex-col items-center justify-center p-4`} onClick={handleClick}>
+    <div className={`w-full h-52 bg-blue-200 rounded-lg shadow-md flex flex-col items-center justify-center p-4`} onClick={handleClick}>
     
       <div className="text-gray-700 text-center text-xl font-semibold">{title}</div>
       <div className="flex justify-center gap-2 mt-4">
@@ -41,6 +41,9 @@ const EvaluatorCard = ({ title,evaluatorId, onEdit, onDelete, colorClass }) => {
         </button>
         <button onClick={(e) => { e.stopPropagation(); onDelete(); }} className="text-sm bg-gray-600 hover:bg-gray-700 text-white py-1 px-2 rounded transition duration-300 ease-in-out">
           Delete
+        </button>
+        <button onClick={(e) => { e.stopPropagation(); onReview();  }} className="text-sm bg-gray-600 hover:bg-gray-700 text-white py-1 px-2 rounded transition duration-300 ease-in-out">
+          Review
         </button>
       </div>
     </div>
@@ -299,6 +302,11 @@ useEffect(() => {
     setIsFormOpen(false);
     setCurrentEditingIndex(null);
   };
+  const navigate = useNavigate();
+  const handleReview = (evaluatorId,title) => {
+    // Navigate to another page and send the title variable along with it
+    navigate(`/review?evaluatorId=${encodeURIComponent(evaluatorId)}&title=${encodeURIComponent(title)}`);
+  };
 
   return (
     <>
@@ -317,6 +325,7 @@ useEffect(() => {
               //colorClass={evaluator.colorClass}
               onEdit={() => handleEdit(evaluator,index)}
               onDelete={() => handleDelete(evaluator._id,index)}
+              onReview={() => handleReview(evaluator._id,evaluator.title)}
             />
           ))}
 

@@ -2,18 +2,47 @@ import React, { useState, useEffect } from 'react';
 import Navbar from '../components/Navbar';
 import Question from '../components/Question';
 import { useLocation } from 'react-router-dom';
+import Select, { components } from 'react-select';
 import axios from 'axios';
+
+
+const { Option, SingleValue } = components;
+
+const CustomOption = (props) => {
+  const handleDelete = (studentId, e) => {
+    e.stopPropagation(); // Prevent dropdown from closing
+    axios.delete(`http://localhost:3000/api/evaluations/${studentId}`)
+      .then(() => {
+        console.log('Deletion successful');
+        // Optionally, refresh the options or handle UI state
+      })
+      .catch(error => {
+        console.error('Error deleting student:', error);
+      });
+  };
+
+  return (
+    <Option {...props}>
+      <div className="flex justify-between items-center">
+        {props.data.label}
+        <button onClick={(e) => handleDelete(props.data.value, e)} className="text-red-500 hover:text-red-700">
+          Delete
+        </button>
+      </div>
+    </Option>
+  );
+};
 
 const ReviewPage = () => {
   const [activeTab, setActiveTab] = useState('answerPaper');
   const [results, setResults] = useState();
+  const [selectedOption, setSelectedOption] = useState(null);
+
 
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const evaluatorId = searchParams.get('evaluatorId');
-  const storedResultsString = localStorage.getItem("results");
-  //console.log(storedResultsString);
-  //const storedResults = storedResultsString ? JSON.parse(storedResultsString) : [];
+  const title = searchParams.get('title');
 
   useEffect(() => {
     const fetchEvaluationData = async () => {
@@ -36,12 +65,30 @@ const ReviewPage = () => {
     const jsonString = result.data.substring(0, result.data.length - 1);
     return JSON.parse(jsonString);
   });
-  console.log(studentData);
+  
   const [selectedStudentIndex, setSelectedStudentIndex] = useState(null);
 
-  const handleStudentChange = (index) => {
-    setSelectedStudentIndex(index);
+  
+  const handleSelectionChange = (selectedOption) => {
+    // 'selectedOption' is the option object selected by the user
+    setSelectedOption(selectedOption); // Updates state with the selected option
+    console.log("Selected Student's ID:", selectedOption.value); // Logs the value (ID) of the selected option
+    console.log("Selected Student's Name:", selectedOption.label); // Logs the label (Name) of the selected option
+    console.log("Selected Student's Index:", selectedOption.index);
+    setSelectedStudentIndex(selectedOption.index); // Logs the index of the selected option
   };
+  
+
+  const handleDelete = studentId => {
+    // Call the backend to delete the student's evaluation
+    console.log('Deleting Student ID:', studentId);
+    // Example: axios.delete(`http://localhost:3000/api/evaluations/${studentId}`)
+  };
+  const options = studentData.map((student,index) => ({
+    value: student.student_id,
+    label: student.student_name,
+    index: index
+  }));
 
   const renderTabContent = () => {
     if (selectedStudentIndex !== null) {
@@ -87,20 +134,17 @@ const ReviewPage = () => {
       </div>
       <div className="flex flex-grow">
         <div className="flex flex-col w-full lg:w-2/3 px-8 pt-8 pb-8 lg:pb-0 lg:pt-8">
-          <h2 className="text-2xl font-bold mb-6">Review - FLAT series-1</h2>
+          <h2 className="text-2xl font-bold mb-6">Review - {title}</h2>
           <div className="mb-4">
             <label className="block text-gray-700 text-sm font-bold mb-2">
               Student:
             </label>
-            <select
-              className="block appearance-none w-full bg-white border border-gray-400 py-2 px-4 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
-              onChange={(e) => handleStudentChange(e.target.value)}
-            >
-              <option value="">Select a student</option>
-              {studentData.map((student, index) => (
-                <option key={index} value={index}>{student.student_name}</option>
-              ))}
-            </select>
+            <Select
+        options={options}
+        value={selectedOption}
+        onChange={handleSelectionChange}
+        components={{ Option: CustomOption }}
+      />
           </div>
           {renderTabContent()}
         </div>

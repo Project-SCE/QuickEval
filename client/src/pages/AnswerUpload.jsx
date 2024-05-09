@@ -71,9 +71,6 @@ const AnswerUpload = () => {
 
     var response = await axios(config);
     
-
-     // Retrieve existing results from localStorage
-     
      const updatedResults = [...results, response.data];
      // Optionally, update state or perform any other necessary actions
      setResults(updatedResults);
@@ -91,10 +88,10 @@ const AnswerUpload = () => {
     console.log(answerSheets)
     for (const answerSheet of answerSheets) {
       const data = await valuate(answerSheet); 
-      const existingResults = JSON.parse(localStorage.getItem("results")) || [];
+      
       // Append the new result to the existing results
-     const updatedResults = [...existingResults, data];
-     localStorage.setItem("results", JSON.stringify(updatedResults));
+     
+     
       setCurrentValuatingSheet(currentValuatingSheet + 1);
     }
 
@@ -104,7 +101,7 @@ const AnswerUpload = () => {
 
     setTimeout(() => {
       // window.location.href = `/review`;
-      navigate(`/review?evaluatorId=${encodeURIComponent(evaluatorId)}`);
+      navigate(`/review?title=${encodeURIComponent(title)}&evaluatorId=${encodeURIComponent(evaluatorId)}`);
     }, 1000);
   };
 
