@@ -4,6 +4,7 @@ import Navbar from '../components/Navbar';
 import { FiCheckCircle, FiUpload } from "react-icons/fi";
 import { ToastContainer, toast } from "react-toastify";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 import * as Bytescale from "@bytescale/sdk";
 
@@ -18,6 +19,7 @@ const AnswerUpload = () => {
   const searchParams = new URLSearchParams(location.search);
   const title = searchParams.get('title');
   const evaluatorId = searchParams.get('evaluatorId');
+  const navigate = useNavigate();
 
  
 
@@ -100,9 +102,10 @@ const AnswerUpload = () => {
     setValuating(false);
     (document.getElementById("valuation_modal")).close();
 
-    // setTimeout(() => {
-    //   window.location.href = `/review`;
-    // }, 1000);
+    setTimeout(() => {
+      // window.location.href = `/review`;
+      navigate(`/review?evaluatorId=${encodeURIComponent(evaluatorId)}`);
+    }, 1000);
   };
 
   const handleUpload = () => {

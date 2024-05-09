@@ -1,14 +1,39 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Navbar from '../components/Navbar';
 import Question from '../components/Question';
+import { useLocation } from 'react-router-dom';
+import axios from 'axios';
 
 const ReviewPage = () => {
   const [activeTab, setActiveTab] = useState('answerPaper');
+  const [results, setResults] = useState();
+
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const evaluatorId = searchParams.get('evaluatorId');
   const storedResultsString = localStorage.getItem("results");
-  const storedResults = storedResultsString ? JSON.parse(storedResultsString) : [];
-  
+  //console.log(storedResultsString);
+  //const storedResults = storedResultsString ? JSON.parse(storedResultsString) : [];
+
+  useEffect(() => {
+    const fetchEvaluationData = async () => {
+      try {
+        const response = await axios.get(`http://localhost:3000/review/${evaluatorId}`);
+        setResults(response.data);
+        console.log(response.data); // Log data for debugging
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        // Optionally, you could set an error state to display an error message in the UI
+      }
+    };
+
+    fetchEvaluationData();
+  }, [evaluatorId]); 
+
+  const storedResults = results || [];
+
   const studentData = storedResults.map((result)=> {
-    const jsonString = result.data.substring(7, result.data.length - 3);
+    const jsonString = result.data.substring(0, result.data.length - 1);
     return JSON.parse(jsonString);
   });
   console.log(studentData);

@@ -152,12 +152,14 @@ router.post('/evaluators/evaluate', async (req, res) => {
         // Assuming the API returns data as stringified JSON in the message content
         
         const valuationData = completion.choices[0].message.content
-        console.log("Valuation Data:", valuationData); // Print the output to the console
+        const jsonString = valuationData.substring(7, valuationData.length - 3);
+        
+        console.log("Valuation Data:", jsonString); // Print the output to the console
         const valuationDataString = JSON.stringify(valuationData);
 
         const newValuation = new Valuation({
             evaluatorId,
-            data: valuationData,
+            data: jsonString,
             answerSheet
         });
 
@@ -171,6 +173,22 @@ router.post('/evaluators/evaluate', async (req, res) => {
 }
 });
 
+// GET endpoint to fetch evaluation data by ID
+router.get('/review/:id', async (req, res) => {
+    console.log("id "+req.params.id)
+    try {
+        const evaluation = await Valuation.find({ evaluatorId: req.params.id });
+        console.log("evaluation")
+        if (evaluation.length === 0) {
+            return res.status(404).json({ message: 'No evaluations found for this evaluator' });
+          }
+        res.json(evaluation); // This is already in JSON format
+      } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: error.message });
+      }
+  });
+  
 
 
 module.exports = router;
