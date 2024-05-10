@@ -47,7 +47,7 @@ const ReviewPage = () => {
   
   const handleSelectionChange = (selectedOption) => {
     // 'selectedOption' is the option object selected by the user
-    //setSelectedOption(selectedOption); // Updates state with the selected option
+    setSelectedOption(selectedOption); // Updates state with the selected option
     console.log("Selected Student's ID:", selectedOption.value); // Logs the value (ID) of the selected option
     console.log("Selected Student's Name:", selectedOption.label); // Logs the label (Name) of the selected option
     console.log("Selected Student's Index:", selectedOption.index);
@@ -55,11 +55,7 @@ const ReviewPage = () => {
   };
   
 
-  const handleDelete = studentId => {
-    // Call the backend to delete the student's evaluation
-    console.log('Deleting Student ID:', studentId);
-    // Example: axios.delete(`http://localhost:3000/api/evaluations/${studentId}`)
-  };
+  
   
   const options = studentData.map((student,index) => ({ // Maps the student data to an array of options
     value: student.student_id,
@@ -107,15 +103,15 @@ const ReviewPage = () => {
   const CustomOption = (props) => {
     const handleDelete = (studentId, e) => {
       e.stopPropagation(); // Prevent dropdown from closing
-      console.log("dele  "+storedResults[studentId]._id)
-      // axios.delete(`http://localhost:3000/api/evaluations/${studentId}`)
-      //   .then(() => {
-      //     console.log('Deletion successful');
-      //     // Optionally, refresh the options or handle UI state
-      //   })
-      //   .catch(error => {
-      //     console.error('Error deleting student:', error);
-      //   });
+      console.log("dele  "+storedResults[studentId]._id) // Logs the student ID to delete
+      axios.delete(`http://localhost:3000/review/${storedResults[studentId]._id}`)
+        .then(() => {
+          console.log('Deletion successful');
+          // Optionally, refresh the options or handle UI state
+        })
+        .catch(error => {
+          console.error('Error deleting student:', error);
+        });
     };
   
     return (

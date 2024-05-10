@@ -188,6 +188,17 @@ router.get('/review/:id', async (req, res) => {
         res.status(500).json({ message: error.message });
       }
   });
+    router.delete('/review/:studentId', async (req, res) => {
+    try {
+      const result = await Valuation.deleteOne({ _id: req.params.studentId });
+      if (result.deletedCount === 0) {
+        return res.status(404).json({ message: 'Evaluation not found' });
+      }
+      res.status(204).send(); // No content to send back
+    } catch (err) {
+      res.status(500).json({ message: 'Server error' });
+    }
+  });
   
 
 
