@@ -8,30 +8,7 @@ import axios from 'axios';
 
 const { Option, SingleValue } = components;
 
-const CustomOption = (props) => {
-  const handleDelete = (studentId, e) => {
-    e.stopPropagation(); // Prevent dropdown from closing
-    axios.delete(`http://localhost:3000/api/evaluations/${studentId}`)
-      .then(() => {
-        console.log('Deletion successful');
-        // Optionally, refresh the options or handle UI state
-      })
-      .catch(error => {
-        console.error('Error deleting student:', error);
-      });
-  };
 
-  return (
-    <Option {...props}>
-      <div className="flex justify-between items-center">
-        {props.data.label}
-        <button onClick={(e) => handleDelete(props.data.value, e)} className="text-red-500 hover:text-red-700">
-          Delete
-        </button>
-      </div>
-    </Option>
-  );
-};
 
 const ReviewPage = () => {
   const [activeTab, setActiveTab] = useState('answerPaper');
@@ -49,7 +26,7 @@ const ReviewPage = () => {
       try {
         const response = await axios.get(`http://localhost:3000/review/${evaluatorId}`);
         setResults(response.data);
-        console.log(response.data); // Log data for debugging
+        
       } catch (error) {
         console.error('Error fetching data:', error);
         // Optionally, you could set an error state to display an error message in the UI
@@ -60,10 +37,9 @@ const ReviewPage = () => {
   }, [evaluatorId]); 
 
   const storedResults = results || [];
-
   const studentData = storedResults.map((result)=> {
-    const jsonString = result.data.substring(0, result.data.length - 1);
-    return JSON.parse(jsonString);
+    // const jsonString = result.data.substring(0, result.data.length - 1);
+    return result.data;
   });
   
   const [selectedStudentIndex, setSelectedStudentIndex] = useState(null);
@@ -71,7 +47,7 @@ const ReviewPage = () => {
   
   const handleSelectionChange = (selectedOption) => {
     // 'selectedOption' is the option object selected by the user
-    setSelectedOption(selectedOption); // Updates state with the selected option
+    //setSelectedOption(selectedOption); // Updates state with the selected option
     console.log("Selected Student's ID:", selectedOption.value); // Logs the value (ID) of the selected option
     console.log("Selected Student's Name:", selectedOption.label); // Logs the label (Name) of the selected option
     console.log("Selected Student's Index:", selectedOption.index);
@@ -84,13 +60,14 @@ const ReviewPage = () => {
     console.log('Deleting Student ID:', studentId);
     // Example: axios.delete(`http://localhost:3000/api/evaluations/${studentId}`)
   };
-  const options = studentData.map((student,index) => ({
+  
+  const options = studentData.map((student,index) => ({ // Maps the student data to an array of options
     value: student.student_id,
     label: student.student_name,
     index: index
   }));
 
-  const renderTabContent = () => {
+  const renderTabContent = () => {    // Renders the content of the selected tab
     if (selectedStudentIndex !== null) {
       const student = studentData[selectedStudentIndex];
       const totalMarks = student.answers.reduce((total, answer) => total + answer.score[0], 0);
@@ -127,6 +104,33 @@ const ReviewPage = () => {
     }
   };
 
+  const CustomOption = (props) => {
+    const handleDelete = (studentId, e) => {
+      e.stopPropagation(); // Prevent dropdown from closing
+      console.log("dele  "+storedResults[studentId]._id)
+      // axios.delete(`http://localhost:3000/api/evaluations/${studentId}`)
+      //   .then(() => {
+      //     console.log('Deletion successful');
+      //     // Optionally, refresh the options or handle UI state
+      //   })
+      //   .catch(error => {
+      //     console.error('Error deleting student:', error);
+      //   });
+    };
+  
+    return (
+      <Option {...props}>
+        <div className="flex justify-between items-center">
+          {props.data.label }
+          <button onClick={(e) => handleDelete(props.data.index, e)} className="text-red-500 hover:text-red-700">
+            Delete
+          </button>
+        </div>
+      </Option>
+    );
+  };
+
+
   return (
     <div className="flex flex-col min-h-screen bg-blue-50">
       <div className="w-full">
@@ -144,6 +148,8 @@ const ReviewPage = () => {
         value={selectedOption}
         onChange={handleSelectionChange}
         components={{ Option: CustomOption }}
+        className="basic-single"
+        classNamePrefix="select"
       />
           </div>
           {renderTabContent()}

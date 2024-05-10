@@ -159,7 +159,7 @@ router.post('/evaluators/evaluate', async (req, res) => {
 
         const newValuation = new Valuation({
             evaluatorId,
-            data: jsonString,
+            data: JSON.parse(jsonString),
             answerSheet
         });
 
