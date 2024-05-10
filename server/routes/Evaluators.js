@@ -199,6 +199,34 @@ router.get('/review/:id', async (req, res) => {
       res.status(500).json({ message: 'Server error' });
     }
   });
+
+  router.post('/update-score', async (req, res) => {
+    const { evaluatorId, roll_no, question_no, newScore } = req.body;
+    console.log(roll_no + " " + question_no + " " + newScore + " " + evaluatorId)
+
+    try {
+        const result = await Valuation.findOneAndUpdate(
+            {
+                "evaluatorId": evaluatorId,             // Match by evaluatorId at the top level
+                "data.roll_no": roll_no,                 // Match roll_no inside data object
+                "data.answers.question_no": question_no  // Match question_no inside answers array which is nested in data
+            },
+            {
+                "$set": { "data.answers.$.score.0": newScore } // Update the first score element for the matched question
+            },
+            { new: true } // Return the updated document
+        );
+        
+        console.log("working")
+
+        if (!result) {
+            return res.status(404).send("evaluation not found");
+        }
+        res.send(result);
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
+});
   
 
 

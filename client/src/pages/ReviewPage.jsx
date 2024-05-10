@@ -34,6 +34,9 @@ const ReviewPage = () => {
     };
 
     fetchEvaluationData();
+
+    const intervalId = setInterval(fetchEvaluationData, 1000);
+    
   }, [evaluatorId]); 
 
   const storedResults = results || [];
@@ -58,7 +61,7 @@ const ReviewPage = () => {
   
   
   const options = studentData.map((student,index) => ({ // Maps the student data to an array of options
-    value: student.student_id,
+    value: student.roll_no,
     label: student.student_name,
     index: index
   }));
@@ -72,12 +75,14 @@ const ReviewPage = () => {
       return (
         <div className="bg-gray-100 p-6 shadow rounded text-gray-700">
           <div>
-            <h3 className="text-lg font-semibold mb-4">{student.student_name}</h3>
+            <h3 className="text-lg font-semibold mb-4">{student.roll_no}.  {student.student_name}</h3>
             <div>
               {student.answers.map((answer) => (
                 <Question
+                  evaluatorId={evaluatorId}
+                  roll_no={student.roll_no}
                   key={answer.question_no}
-                  id={answer.question_no}
+                  question_no={answer.question_no}
                   answer={answer.answer}
                   remarks={answer.remarks}  
                   question={answer.question}
