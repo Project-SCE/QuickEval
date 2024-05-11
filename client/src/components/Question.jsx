@@ -64,7 +64,7 @@ const Question = ({ evaluatorId,roll_no, question_no, question,answer,remarks, m
         <h3 className="text-lg font-semibold">{question_no}. {question}</h3>
         <div className="flex items-center space-x-2">
           <div className={`px-2 py-1 rounded ${confidenceColor(confidence)}`}>
-            Marks {newScore}/{totalMarks}
+            Marks {marks}/{totalMarks}
           </div>
           <div className={`px-2 py-1 rounded ${confidenceColor(confidence)}`}>
             {confidence.charAt(0).toUpperCase() + confidence.slice(1)}

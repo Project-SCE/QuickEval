@@ -5,6 +5,7 @@ import { FiCheckCircle, FiUpload } from "react-icons/fi";
 import { ToastContainer, toast } from "react-toastify";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import serverUrl from '../utils/utils';
 
 import * as Bytescale from "@bytescale/sdk";
 
@@ -57,7 +58,7 @@ const AnswerUpload = () => {
   const valuate = async (answerSheet) => {
     const config = {
       method: "POST",
-      url: "http://localhost:3000/evaluators/evaluate",
+      url: `${serverUrl}/evaluators/evaluate`,
       headers: {
         
         "Content-Type": `application/json`,
