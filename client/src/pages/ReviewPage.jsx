@@ -6,6 +6,7 @@ import Select, { components } from 'react-select';
 import axios from 'axios';
 
 
+
 const { Option, SingleValue } = components;
 
 
@@ -20,25 +21,53 @@ const ReviewPage = () => {
   const searchParams = new URLSearchParams(location.search);
   const evaluatorId = searchParams.get('evaluatorId');
   const title = searchParams.get('title');
+  const [answerKey, setAnswerKey] = useState();
+  const [questionPaper, setQuestionPaper] = useState();
+  const [answerPaper, setAnswerPaper] = useState([]);
+
+  
 
   useEffect(() => {
     const fetchEvaluationData = async () => {
       try {
         const response = await axios.get(`http://localhost:3000/review/${evaluatorId}`);
+        
         setResults(response.data);
+        
+        // const answerPaperUrl = response.data.map(obj => ({
+        //   rollNo: obj.data.roll_no,
+        //   answersheet: obj.answerSheet,
+        //   id : obj._id
+        // }));
+        // setAnswerPaper([answerPaperUrl[0].answersheet]);
         
       } catch (error) {
         console.error('Error fetching data:', error);
         // Optionally, you could set an error state to display an error message in the UI
       }
     };
+    const fetchEvaluator = async () => {
+      try {
+        const evaluator = await axios.get(`http://localhost:3000/evaluator/${evaluatorId}`);
+        
+        setAnswerKey(evaluator.data[0].answerKey);
+        setQuestionPaper(evaluator.data[0].questionPaper);
+      }
+      catch (error) {
+        console.error('Error fetching data:', error);
+        // Optionally, you could set an error state to display an error message in the UI
+      }
+    };
+
+    fetchEvaluator();
 
     fetchEvaluationData();
 
-    const intervalId = setInterval(fetchEvaluationData, 1000);
+    const intervalId = setInterval(fetchEvaluationData, 2000);
     
   }, [evaluatorId]); 
 
+ 
   const storedResults = results || [];
   const studentData = storedResults.map((result)=> {
     // const jsonString = result.data.substring(0, result.data.length - 1);
@@ -131,6 +160,47 @@ const ReviewPage = () => {
     );
   };
 
+  function DocumentViewer() {
+    // Links to images; these could also be dynamically fetched or passed as props
+    const links = {
+        'answer paper': 'https://upcdn.io/kW15c3F/raw/uploads/2024/05/10/4kdDzYYzsR-answerpp2.jpg',
+        'question paper': questionPaper,
+        'scheme': answerKey
+    };
+
+    // State to hold the current active image URL
+    const [activeImage, setActiveImage] = useState('');
+
+    // Function to handle button clicks
+    const handleButtonClick = (tabName) => {
+        setActiveImage(links[tabName]); // Update the active image based on the button clicked
+    };
+
+    return (
+      <div className="flex flex-col items-center">
+      <div className="flex justify-between space-x-4 mb-4">
+          {Object.keys(links).map((tab) => (
+              <button
+                  key={tab}
+                  onClick={() => handleButtonClick(tab)}
+                  className={`text-lg p-4 rounded-lg transition-colors duration-150 ${
+                      activeImage === links[tab] ? 'bg-blue-600 text-white' : 'bg-blue-200 hover:bg-blue-300 text-blue-800'
+                  }`}
+              >
+                  {tab.charAt(0).toUpperCase() + tab.slice(1)} 
+              </button>
+          ))}
+      </div>
+      <div className="image-container border rounded-lg overflow-auto max-w-full" style={{height: "580px"}}> {/* Container UI for the image */}
+          {activeImage && <img src={activeImage} alt="Document" className="max-w-full h-auto" />}
+      </div>
+  </div>
+  
+  
+  
+    );
+}
+
 
   return (
     <div className="flex flex-col min-h-screen bg-blue-50">
@@ -156,20 +226,7 @@ const ReviewPage = () => {
           {renderTabContent()}
         </div>
         <div className="w-full lg:w-1/3 px-8 pt-8 pb-8 lg:pt-8 lg:pb-0">
-          <div className="flex justify-between space-x-4">
-            {['Answer paper', 'Question paper', 'Scheme'].map((tab) => (
-              <button
-                key={tab}
-                onClick={() => setActiveTab(tab.toLowerCase().replace(/\s/g, ''))}
-                className={`text-lg p-4 rounded-lg transition-colors duration-150 ${
-                  activeTab === tab.toLowerCase().replace(/\s/g, '') ? 'bg-blue-600 text-white' : 'bg-blue-200 hover:bg-blue-300 text-blue-800'
-                }`}
-              >
-                {tab}
-              </button>
-            ))}
-          </div>
-          
+          {DocumentViewer()}          
         </div>
       </div>
     </div>

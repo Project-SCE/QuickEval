@@ -13,6 +13,7 @@ student_name: the student's name from the answer sheet. The name of the student 
 class: the student's class from the answer sheet (if provided, otherwise empty string)
 roll_no: the student's roll number from the answer sheet. Try to use given roll number (if provided, otherwise empty string)
 
+
 answers: an array of objects containing the following fields:
 
 question_no: the question number
@@ -21,6 +22,7 @@ answer: the student's answer
 score: an array containing [ assigned_score, total_score ]
 remarks: any additional remarks or comments regarding the answer. If the answer is completely correct, "Correct answer" is a good remark.
 confidence: a number between 0 and 1 indicating how confident you are in your grading. 0 means you are not confident at all, 1 means you are completely confident.
+
 
 Just send the JSON response only, without any other text.`,
 };

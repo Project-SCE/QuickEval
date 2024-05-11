@@ -65,6 +65,19 @@ router.get('/evaluators/:educatorId', async (req, res) => {
     }
 });
 
+// GET route to fetch  evaluator
+router.get('/evaluator/:evaluatorId', async (req, res) => {
+    try {
+        const { evaluatorId } = req.params;
+        const evaluator = await Evaluator.find({ _id: evaluatorId });
+        if (!evaluator) {
+            return res.status(404).json({ message: "Evaluator not found" });
+        }
+        res.status(200).json(evaluator);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
 
 // PUT route to update an evaluator
 router.put('/evaluators/:id', async (req, res) => {
