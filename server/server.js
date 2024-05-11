@@ -5,10 +5,7 @@ require("dotenv").config();
 const mongoose = require("mongoose");
 const evaluatorRouter = require("./routes/Evaluators");
 const Evaluator = require('./models/Evaluator');
-const WebSocket = require('ws');
 
-
-const wss = new WebSocket.Server({ port: 8080 });
 
 const app = express();
 app.use(express.json());
@@ -26,17 +23,6 @@ async function connectDB() {
 connectDB();
 
 
-let connections = [];
-
-wss.on('connection', function connection(ws) {
-    console.log('A new client connected');
-    connections.push(ws);
-
-    ws.on('close', () => {
-        console.log('Client disconnected');
-        connections = connections.filter(conn => conn !== ws);
-    });
-});
 
 
 
