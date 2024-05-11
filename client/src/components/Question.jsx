@@ -29,18 +29,23 @@ const Question = ({ evaluatorId,roll_no, question_no, question,answer,remarks, m
   const handleUpdateClick = async (event) => {
     event.stopPropagation(); // This prevents the click event from bubbling up to the parent
     console.log('Input Value on Update:', inputValue); // Logs the current state
-    const integerScore = parseInt(newScore, 10);
+    const Score = parseFloat(newScore);
+    if (Score < 0 || Score > totalMarks) {
+      alert(`Please enter a score between 0 and ${totalMarks}`);
+      return;
+    }
     const url = 'http://localhost:3000/update-score';  // URL of your endpoint
     const data = {
         evaluatorId,
         roll_no,
         question_no,
-        newScore: integerScore
+        newScore: Score
     };
 
     try {
         const response = await axios.post(url, data);
         console.log('Update successful:', response.data);
+        alert('Score updated successfully!');
     } catch (error) {
         console.error('Error updating score:', error.response ? error.response.data : error.message);
     }

@@ -175,10 +175,10 @@ router.post('/evaluators/evaluate', async (req, res) => {
 
 // GET endpoint to fetch evaluation data by ID
 router.get('/review/:id', async (req, res) => {
-    console.log("id "+req.params.id)
+    
     try {
         const evaluation = await Valuation.find({ evaluatorId: req.params.id });
-        console.log("evaluation")
+        
         if (evaluation.length === 0) {
             return res.status(404).json({ message: 'No evaluations found for this evaluator' });
           }
@@ -202,7 +202,7 @@ router.get('/review/:id', async (req, res) => {
 
   router.post('/update-score', async (req, res) => {
     const { evaluatorId, roll_no, question_no, newScore } = req.body;
-    console.log(roll_no + " " + question_no + " " + newScore + " " + evaluatorId)
+    
 
     try {
         const result = await Valuation.findOneAndUpdate(
@@ -217,7 +217,7 @@ router.get('/review/:id', async (req, res) => {
             { new: true } // Return the updated document
         );
         
-        console.log("working")
+        
 
         if (!result) {
             return res.status(404).send("evaluation not found");

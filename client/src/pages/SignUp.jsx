@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 import {  createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { auth } from '../firebase';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate,Navigate } from 'react-router-dom';
 import Navbarlogin from '../components/Navbarlogin';
+
+
+import { useAuth } from '.././Authcontext';
 
 const SignIn = () => {
   const [email, setEmail] = useState('');
@@ -10,6 +13,13 @@ const SignIn = () => {
   const [name, setName] = useState('');
   const navigate = useNavigate();
   const [error, setError] = useState(null);
+
+  const { currentUser, loading } = useAuth();
+
+  if (currentUser) {
+    // Redirect them to the evaluator page, but save the current location they were trying to go to
+    return <Navigate to="/evaluator" replace />;
+  }
   
  
   const onSubmit = async (e) => {

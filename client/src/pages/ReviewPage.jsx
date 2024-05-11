@@ -108,7 +108,7 @@ const ReviewPage = () => {
   const CustomOption = (props) => {
     const handleDelete = (studentId, e) => {
       e.stopPropagation(); // Prevent dropdown from closing
-      console.log("dele  "+storedResults[studentId]._id) // Logs the student ID to delete
+       // Logs the student ID to delete
       axios.delete(`http://localhost:3000/review/${storedResults[studentId]._id}`)
         .then(() => {
           console.log('Deletion successful');

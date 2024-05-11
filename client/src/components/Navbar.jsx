@@ -19,7 +19,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="flex justify-between items-center mx-auto p-4" style={gradientStyle}>
+    <nav className="flex justify-between items-center mx-auto p-4 z=1" style={gradientStyle}>
       <div className="text-3xl font-bold">
         <span className="text-white ml-8">Quick</span>
         <span className="text-[#BE2817]">Eval</span>
