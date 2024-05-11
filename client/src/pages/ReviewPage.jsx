@@ -4,7 +4,7 @@ import Question from '../components/Question';
 import { useLocation } from 'react-router-dom';
 import Select, { components } from 'react-select';
 import axios from 'axios';
-
+import serverUrl from '../utils/utils';
 
 
 const { Option, SingleValue } = components;
@@ -30,7 +30,7 @@ const ReviewPage = () => {
   useEffect(() => {
     const fetchEvaluationData = async () => {
       try {
-        const response = await axios.get(`http://localhost:3000/review/${evaluatorId}`);
+        const response = await axios.get(`${serverUrl}/review/${evaluatorId}`);
         
         setResults(response.data);
         
@@ -51,7 +51,7 @@ const ReviewPage = () => {
     };
     const fetchEvaluator = async () => {
       try {
-        const evaluator = await axios.get(`http://localhost:3000/evaluator/${evaluatorId}`);
+        const evaluator = await axios.get(`${serverUrl}/evaluator/${evaluatorId}`);
         
         setAnswerKey(evaluator.data[0].answerKey);
         setQuestionPaper(evaluator.data[0].questionPaper);
@@ -143,7 +143,7 @@ const ReviewPage = () => {
     const handleDelete = (studentId, e) => {
       e.stopPropagation(); // Prevent dropdown from closing
        // Logs the student ID to delete
-      axios.delete(`http://localhost:3000/review/${storedResults[studentId]._id}`)
+      axios.delete(`${serverUrl}/review/${storedResults[studentId]._id}`)
         .then(() => {
           console.log('Deletion successful');
           // Optionally, refresh the options or handle UI state

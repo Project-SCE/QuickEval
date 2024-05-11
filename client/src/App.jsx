@@ -19,9 +19,9 @@ function App() {
         <Route path="/" element={<Landing />} />  // Now LandingPage is at root
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignUp />} />
-        <Route path='/answerupload' element={<AnswerUpload/>}></Route>
+        <Route path='/answerupload' element={<ProtectedRoute><AnswerUpload/></ProtectedRoute>}></Route>
 
-        <Route path="/review" element={<Review />} />
+        <Route path="/review" element={<ProtectedRoute><Review /></ProtectedRoute>} />
 
         <Route path="/evaluator" element={
           <ProtectedRoute>

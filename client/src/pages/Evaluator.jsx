@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import serverUrl from '../utils/utils';
 
 import Navbarnormal from '../components/Navbarnormal'; 
 import { useAuth } from '../Authcontext';
@@ -109,12 +110,12 @@ const NewEvaluatorForm = ({ onSubmit, onClose, currentEvaluator }) => {
         questionPaper: questionPaper,
         answerKey: scheme,
     };
-    let url = 'http://localhost:3000/evaluators';
+    let url = `${serverUrl}/evaluators`;
     let method = 'post';
 
     if (currentEvaluator) {
         // If currentEvaluator exists, it means we're updating an existing evaluator
-        url = `http://localhost:3000/evaluators/${currentEvaluator._id}`;
+        url = `${serverUrl}/evaluators/${currentEvaluator._id}`;
         method = 'put';
     }
 
@@ -223,7 +224,7 @@ const EvaluatorPage = () => {
 useEffect(() => {
   const fetchEvaluators = async () => {
     try {
-      const response = await fetch(`http://localhost:3000/evaluators/${currentUser.uid}`);
+      const response = await fetch(`${serverUrl}/evaluators/${currentUser.uid}`);
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
@@ -269,7 +270,7 @@ useEffect(() => {
         const id = evaluator._id;
 
         // Make PUT request to update the item
-        const response = await axios.put(`/evaluators/${id}`, updatedData);
+        const response = await axios.put(`${serverUrl}/evaluators/${id}`, updatedData);
 
         // Handle success
         console.log('Item updated successfully:', response.data);
@@ -285,7 +286,7 @@ useEffect(() => {
 };
 
   const handleDelete = (id, index) => {
-    axios.delete(`http://localhost:3000/evaluators/${id}`)
+    axios.delete(`${serverUrl}/evaluators/${id}`)
     .then(response => {
         // Assuming the server sends back a success message
         console.log(response.data.message);
