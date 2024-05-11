@@ -34,12 +34,15 @@ const ReviewPage = () => {
         
         setResults(response.data);
         
-        // const answerPaperUrl = response.data.map(obj => ({
-        //   rollNo: obj.data.roll_no,
-        //   answersheet: obj.answerSheet,
-        //   id : obj._id
-        // }));
-        // setAnswerPaper([answerPaperUrl[0].answersheet]);
+        const answerPaperUrl = await response.data.map(obj => ({
+          "rollNo": obj.data.roll_no,
+          "answersheet": obj.answerSheet,
+          "id" : obj._id
+        }));
+        
+        setAnswerPaper(answerPaperUrl);
+        
+
         
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -61,18 +64,20 @@ const ReviewPage = () => {
 
     fetchEvaluator();
 
-    fetchEvaluationData();
+    fetchEvaluationData()
+   
 
-    const intervalId = setInterval(fetchEvaluationData, 2000);
+    const intervalId = setInterval(fetchEvaluationData, 1000);
     
   }, [evaluatorId]); 
-
+ 
  
   const storedResults = results || [];
   const studentData = storedResults.map((result)=> {
     // const jsonString = result.data.substring(0, result.data.length - 1);
     return result.data;
   });
+  console.log("Answer Paper URL:", answerPaper);
   
   const [selectedStudentIndex, setSelectedStudentIndex] = useState(null);
 
@@ -162,8 +167,17 @@ const ReviewPage = () => {
 
   function DocumentViewer() {
     // Links to images; these could also be dynamically fetched or passed as props
+    const answer= ()=>{
+      if(answerPaper.length>0){
+        return answerPaper[selectedStudentIndex].answersheet
+      }
+      else{
+        return 'https://via.placeholder.com/800x600'
+      }
+
+    }
     const links = {
-        'answer paper': 'https://upcdn.io/kW15c3F/raw/uploads/2024/05/10/4kdDzYYzsR-answerpp2.jpg',
+        'answer paper':  answer,
         'question paper': questionPaper,
         'scheme': answerKey
     };
