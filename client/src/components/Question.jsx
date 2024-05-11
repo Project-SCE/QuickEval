@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import serverUrl from '../utils/utils';
 
 const confidenceColor = (confidence) => {
   switch (confidence) {
@@ -34,7 +35,7 @@ const Question = ({ evaluatorId,roll_no, question_no, question,answer,remarks, m
       alert(`Please enter a score between 0 and ${totalMarks}`);
       return;
     }
-    const url = 'http://localhost:3000/update-score';  // URL of your endpoint
+    const url = `${serverUrl}/update-score`;  // URL of your endpoint
     const data = {
         evaluatorId,
         roll_no,
