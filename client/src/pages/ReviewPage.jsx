@@ -68,6 +68,10 @@ const ReviewPage = () => {
    
 
     const intervalId = setInterval(fetchEvaluationData, 1000);
+
+    return () => {
+      clearInterval(intervalId);
+  };
     
   }, [evaluatorId]); 
  
