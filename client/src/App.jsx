@@ -9,6 +9,7 @@ import EvaluatorPage from './pages/Evaluator';
 import {auth} from './firebase';
 import { AuthProvider } from './Authcontext';
 import ProtectedRoute from './components/ProtectedRoute';
+import { Analytics } from "@vercel/analytics/react"
 
 
 function App() {
@@ -31,6 +32,7 @@ function App() {
 
       </Routes>
     </Router>
+    <Analytics  />
     </AuthProvider>
   );
 }
