@@ -14,7 +14,7 @@ const Navbarnormal = ({currentPage}) => {
     setShowMenu(!showMenu);
   };
 
-  console.log(currentUser); 
+ 
   
   const userInitial = currentUser && currentUser.displayName ? currentUser.displayName.charAt(0) : 'N/A';
   const gradientStyle = {
