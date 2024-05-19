@@ -22,7 +22,7 @@ answer: the student's answer
 score: an array containing [ assigned_score, total_score ]
 remarks: any additional remarks or comments regarding the answer. If the answer is completely correct, "Correct answer" is a good remark.
 confidence: a number between 0 and 1 indicating how confident you are in your grading. 0 means you are not confident at all, 1 means you are completely confident.
-
+Reason: How do you justify the cofidence you have provided. If you have high confidence what does it mean. what should i infer from it? how did you come to the conclusion. Explain the criterias used for the confidence measure. Give it as a string
 
 Just send the JSON response only, without any other text.`,
 };
