@@ -73,7 +73,7 @@ const Landing = () => {
       <div className="relative">
         <div id="about-us" className="absolute inset-0 bg-transparent p-4"></div> {/* Invisible square box */}
         <h2 className="text-4xl font-bold mb-8 text-white" style={{ background: extensionColor }}>About Us</h2>
-        <p className="text-white">At QuckEval, we believe in the transformative power of education and technology working hand in hand. Our mission is to enhance the learning experience for students and educators alike with innovative, reliable, and easy-to-use grading solutions. We are dedicated to providing tools that offer precise assessments, insightful feedback, and empower educators to focus on what they do best — teaching.</p>
+        <p className="text-white">At QuickEval, we believe in the transformative power of education and technology working hand in hand. Our mission is to enhance the learning experience for students and educators alike with innovative, reliable, and easy-to-use grading solutions. We are dedicated to providing tools that offer precise assessments, insightful feedback, and empower educators to focus on what they do best — teaching.</p>
       </div>
     </div>
   </div>
