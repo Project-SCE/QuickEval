@@ -25,12 +25,24 @@ const Landing = () => {
           </div>
         </div>
       </div>
-      
+
+      <div className="bg-[#262B36] py-12">
+      <div className="container mx-auto px-4 text-center">
+      <div className="w-3/4 mx-auto">
+      <div className="relative">
+        <div id="about-us" className="absolute inset-0 bg-transparent p-4"></div> {/* Invisible square box */}
+        <h2 className="text-4xl font-bold mb-8 text-white" style={{ background: extensionColor }}>About Us</h2>
+        <p className="text-white">At QuickEval, we believe in the transformative power of education and technology working hand in hand. Our mission is to enhance the learning experience for students and educators alike with innovative, reliable, and easy-to-use grading solutions. We are dedicated to providing tools that offer precise assessments, insightful feedback, and empower educators to focus on what they do best — teaching.</p>
+      </div>
+    </div>
+    </div>
+</div>
+
       {/* Extension section */}
-      <div id="meet-the-team" style={{ background: extensionColor }} className="min-h-screen flex flex-col justify-center">
+      <div id="meet-the-team" style={{ background: extensionColor }} className="min-height: 50vh flex flex-col justify-center">
         <div className="container mx-auto px-4 py-12 text-center">
           <h2 className="text-4xl font-bold mb-8 text-white">Meet the Team</h2>
-          <div className="grid grid-cols-4 gap-8">
+          <div className="grid grid-cols-4 gap-12">
             {/* Team members */}
             <div className="bg-white rounded-lg shadow p-6">
               <h3 className="text-xl font-semibold mb-2">JOBIN TOM</h3>
@@ -67,17 +79,7 @@ const Landing = () => {
             </div>
           </div>
         </div>
-        <div className="bg-[#262B36] py-12">
-  <div className="container mx-auto px-4 text-center">
-    <div className="w-3/4 mx-auto">
-      <div className="relative">
-        <div id="about-us" className="absolute inset-0 bg-transparent p-4"></div> {/* Invisible square box */}
-        <h2 className="text-4xl font-bold mb-8 text-white" style={{ background: extensionColor }}>About Us</h2>
-        <p className="text-white">At QuickEval, we believe in the transformative power of education and technology working hand in hand. Our mission is to enhance the learning experience for students and educators alike with innovative, reliable, and easy-to-use grading solutions. We are dedicated to providing tools that offer precise assessments, insightful feedback, and empower educators to focus on what they do best — teaching.</p>
-      </div>
-    </div>
-  </div>
-</div>
+    
 
       </div>
     </div>

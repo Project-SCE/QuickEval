@@ -25,8 +25,9 @@ const Navbar = () => {
         <span className="text-[#BE2817]">Eval</span>
       </div>
       <div className="flex items-center space-x-8 mr-10">
-        <Link to="/#meet-the-team" className="text-white hover:text-gray-300 text-lg">Contact</Link>
+        
         <Link to="/#about-us" className="text-white hover:text-gray-300 text-lg">About</Link>
+        <Link to="/#meet-the-team" className="text-white hover:text-gray-300 text-lg">Contact</Link>
         
         {currentUser && (
           <Link to="/evaluator" className="text-white hover:text-gray-300 text-lg">Evaluators</Link>
