@@ -9,7 +9,6 @@ import axios from 'axios';
 
 import * as Bytescale from "@bytescale/sdk";
 
-
 const uploadManager = new Bytescale.UploadManager({
   apiKey: import.meta.env.VITE_BYTESCALE_API_KEY // This is your API key.
 });
